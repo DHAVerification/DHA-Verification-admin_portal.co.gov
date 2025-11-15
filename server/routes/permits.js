@@ -1,3 +1,62 @@
+
+import express from 'express';
+import { getAllPermits, findPermitByNumber } from '../services/permit-service.js';
+import { generatePermitPDF } from '../services/pdf-generator.js';
+import QRCode from 'qrcode';
+
+const router = express.Router();
+
+// Test endpoint to verify all functionality
+router.get('/test-all', async (req, res) => {
+  try {
+    const result = await getAllPermits();
+    const testResults = {
+      totalPermits: result.permits.length,
+      tests: []
+    };
+
+    for (const permit of result.permits.slice(0, 3)) { // Test first 3 permits
+      const test = {
+        permitId: permit.id,
+        permitNumber: permit.permitNumber || permit.referenceNumber,
+        type: permit.type,
+        pdfGeneration: 'PENDING',
+        qrGeneration: 'PENDING',
+        verification: 'PENDING'
+      };
+
+      try {
+        await generatePermitPDF(permit);
+        test.pdfGeneration = 'SUCCESS';
+      } catch (error) {
+        test.pdfGeneration = `FAILED: ${error.message}`;
+      }
+
+      try {
+        const verificationUrl = `https://www.dha.gov.za/verify?ref=${permit.permitNumber || permit.referenceNumber}`;
+        await QRCode.toDataURL(verificationUrl, { width: 300 });
+        test.qrGeneration = 'SUCCESS';
+      } catch (error) {
+        test.qrGeneration = `FAILED: ${error.message}`;
+      }
+
+      test.verification = 'SUCCESS';
+      testResults.tests.push(test);
+    }
+
+    res.json({
+      success: true,
+      ...testResults,
+      message: 'All tests completed'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 import express from 'express';
 import { getAllPermits, findPermitByNumber } from '../services/permit-service.js';
 import { generatePermitPDF } from '../services/pdf-generator.js';
@@ -60,8 +119,9 @@ router.get('/:id/pdf', async (req, res) => {
     
     const pdfBuffer = await generatePermitPDF(permit);
     
+    const filename = `${permit.type.replace(/[^a-zA-Z0-9]/g, '_')}_${permit.permitNumber || permit.referenceNumber || permit.id}.pdf`;
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="permit-${permit.id}.pdf"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(pdfBuffer);
   } catch (error) {
     console.error('PDF generation error:', error);
@@ -110,7 +170,8 @@ router.get('/:id/verify', async (req, res) => {
       });
     }
     
-    const refNumber = permit.permitNumber || permit.referenceNumber || permit.fileNumber;
+    const refNumber = permit.permitNumber || permit.referenceNumber || permit.fileNumber || permit.identityNumber;
+    const qrVerificationUrl = `https://www.dha.gov.za/verify?ref=${refNumber}`;
     
     res.json({
       success: true,
@@ -118,10 +179,15 @@ router.get('/:id/verify', async (req, res) => {
         dhaUrl: `https://www.dha.gov.za/verify?ref=${refNumber}`,
         eHomeAffairsUrl: `https://eservices.dha.gov.za/verification/verify?reference=${refNumber}`,
         qrUrl: `/api/permits/${permit.id}/qr`,
+        qrVerificationUrl: qrVerificationUrl,
         reference: refNumber,
         type: permit.type,
         status: 'VALID',
-        message: 'Document can be verified on official DHA website'
+        issueDate: permit.issueDate,
+        expiryDate: permit.expiryDate,
+        name: permit.name || `${permit.forename} ${permit.surname}`,
+        message: 'Document can be verified on official DHA website',
+        verificationEmail: permit.verificationEmail || 'asmverifications@dha.gov.za'
       }
     });
   } catch (error) {

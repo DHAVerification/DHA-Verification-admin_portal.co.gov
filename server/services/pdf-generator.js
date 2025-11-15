@@ -123,7 +123,8 @@ function generatePermanentResidencePDF(doc, permit) {
   doc.text('Department of Home Affairs', 50, y);
   doc.text('PRETORIA 0001', 50, y + 12);
   
-  QRCode.toDataURL(permit.permitNumber || '', { width: 100 })
+  const verificationUrl = `https://www.dha.gov.za/verify?ref=${permit.permitNumber || ''}`;
+  QRCode.toDataURL(verificationUrl, { width: 100 })
     .then(qrDataUrl => {
       const qrImage = Buffer.from(qrDataUrl.split(',')[1], 'base64');
       doc.image(qrImage, 450, y - 60, { width: 80 });
@@ -188,7 +189,8 @@ function generateWorkPermitPDF(doc, permit) {
   y += 15;
   doc.text('(2) The above permit holder does not become a permanent resident', 50, y, { width: 495 });
   
-  QRCode.toDataURL(permit.permitNumber || '', { width: 100 })
+  const verificationUrl = `https://www.dha.gov.za/verify?ref=${permit.permitNumber || ''}`;
+  QRCode.toDataURL(verificationUrl, { width: 100 })
     .then(qrDataUrl => {
       const qrImage = Buffer.from(qrDataUrl.split(',')[1], 'base64');
       doc.image(qrImage, 450, y + 20, { width: 80 });
@@ -239,7 +241,8 @@ function generateRelativesPermitPDF(doc, permit) {
   y += 15;
   doc.text('(3) Subject to Reg. 3(7)', 50, y, { width: 495 });
   
-  QRCode.toDataURL(permit.permitNumber || '', { width: 100 })
+  const verificationUrl = `https://www.dha.gov.za/verify?ref=${permit.permitNumber || ''}`;
+  QRCode.toDataURL(verificationUrl, { width: 100 })
     .then(qrDataUrl => {
       const qrImage = Buffer.from(qrDataUrl.split(',')[1], 'base64');
       doc.image(qrImage, 450, y + 20, { width: 80 });
@@ -300,7 +303,8 @@ function generateBirthCertificatePDF(doc, permit) {
   doc.fontSize(8).fillColor('#000000');
   doc.text(`DATE PRINTED: ${new Date().toISOString().split('T')[0]}`, 50, y);
   
-  QRCode.toDataURL(permit.referenceNumber || permit.identityNumber || '', { width: 100 })
+  const verificationUrl = `https://www.dha.gov.za/verify?ref=${permit.referenceNumber || permit.identityNumber || ''}`;
+  QRCode.toDataURL(verificationUrl, { width: 100 })
     .then(qrDataUrl => {
       const qrImage = Buffer.from(qrDataUrl.split(',')[1], 'base64');
       doc.image(qrImage, 450, 200, { width: 80 });
@@ -402,7 +406,8 @@ function generateRefugeePDF(doc, permit) {
   doc.text('ISSUING OFFICE:', 50, y);
   doc.text('DEPARTMENT OF HOME AFFAIRS', 50, y + 15);
   
-  QRCode.toDataURL(permit.fileNumber || permit.permitNumber || '', { width: 100 })
+  const verificationUrl = `https://www.dha.gov.za/verify?ref=${permit.fileNumber || permit.permitNumber || ''}`;
+  QRCode.toDataURL(verificationUrl, { width: 100 })
     .then(qrDataUrl => {
       const qrImage = Buffer.from(qrDataUrl.split(',')[1], 'base64');
       doc.image(qrImage, 450, y, { width: 80 });
@@ -433,7 +438,8 @@ function generateGenericPermitPDF(doc, permit) {
     y += 20;
   });
   
-  QRCode.toDataURL(permit.permitNumber || permit.referenceNumber || '', { width: 100 })
+  const verificationUrl = `https://www.dha.gov.za/verify?ref=${permit.permitNumber || permit.referenceNumber || ''}`;
+  QRCode.toDataURL(verificationUrl, { width: 100 })
     .then(qrDataUrl => {
       const qrImage = Buffer.from(qrDataUrl.split(',')[1], 'base64');
       doc.image(qrImage, 450, 650, { width: 80 });

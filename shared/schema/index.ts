@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { pgTable, text, integer, timestamp, boolean, jsonb, varchar } from "drizzle-orm/pg-core";
+import { relations } from 'drizzle-orm';
 
 // Base Types
 export interface Coordinates {
@@ -170,7 +171,71 @@ export const incidents = pgTable("incidents", {
   resolvedBy: text("resolved_by")
 });
 
-// Type exports
+// People table
+export const people = pgTable('people', {
+  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+  fullName: text('full_name').notNull(),
+  firstName: text('first_name'),
+  surname: text('surname'),
+  passportNumber: text('passport_number'),
+  idNumber: text('id_number'),
+  nationality: text('nationality'),
+  dateOfBirth: text('date_of_birth'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+});
+
+// Document types table
+export const documentTypes = pgTable('document_types', {
+  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+  code: text('code').notNull().unique(),
+  name: text('name').notNull(),
+  description: text('description'),
+  category: text('category'),
+  requiredFields: jsonb('required_fields')
+});
+
+// Documents table
+export const documents = pgTable('documents', {
+  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+  personId: integer('person_id').notNull().references(() => people.id),
+  documentTypeId: integer('document_type_id').notNull().references(() => documentTypes.id),
+  documentNumber: text('document_number').notNull().unique(),
+  referenceNumber: text('reference_number'),
+  issueDate: text('issue_date').notNull(),
+  expiryDate: text('expiry_date'),
+  status: text('status').notNull().default('Issued'),
+  metadata: jsonb('metadata'),
+  officerName: text('officer_name'),
+  officerID: text('officer_id'),
+  dataSource: text('data_source').default('DHA_NPR'),
+  dhaVerified: boolean('dha_verified').default(true),
+  signature: text('signature'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+});
+
+// Relations
+export const peopleRelations = relations(people, ({ many }) => ({
+  documents: many(documents)
+}));
+
+export const documentTypesRelations = relations(documentTypes, ({ many }) => ({
+  documents: many(documents)
+}));
+
+export const documentsRelations = relations(documents, ({ one }) => ({
+  person: one(people, {
+    fields: [documents.personId],
+    references: [people.id]
+  }),
+  documentType: one(documentTypes, {
+    fields: [documents.documentTypeId],
+    references: [documentTypes.id]
+  })
+}));
+
+
 export type DhaDocumentVerification = typeof dhaDocumentVerifications.$inferSelect;
 export type InsertDhaDocumentVerification = typeof dhaDocumentVerifications.$inferInsert;
 

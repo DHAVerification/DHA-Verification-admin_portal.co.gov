@@ -36,8 +36,14 @@ app.use('/api/', limiter);
 // Trust proxy for Replit environment
 app.set('trust proxy', 1);
 
-// Serve static files
-app.use('/public', express.static(path.join(__dirname, '../attached_assets')));
+// Serve static files with proper headers
+app.use('/public', express.static(path.join(__dirname, '../attached_assets'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.html')) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    }
+  }
+}));
 
 // Sample permit data - All 13 records
 const permits = [
@@ -239,6 +245,7 @@ const permits = [
 
 // Root route - serve main back office interface
 app.get('/', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.sendFile(path.join(__dirname, '../attached_assets/dha-back-office-complete_1763210930331.html'));
 });
 

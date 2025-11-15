@@ -1,0 +1,50 @@
+services:
+  - type: web
+    name: dha-back-office
+    env: node
+    plan: standard
+    
+    # Build configuration
+    buildCommand: npm install
+    startCommand: npm start
+    
+    # Environment variables
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      - key: DOCUMENT_SIGNING_KEY
+        scope: build,runtime
+      - key: DOCUMENT_ENCRYPTION_KEY
+        scope: build,runtime
+      - key: JWT_SECRET
+        scope: build,runtime
+      - key: SESSION_SECRET
+        scope: build,runtime
+      - key: DHA_NPR_API_KEY
+        scope: build,runtime
+      - key: DHA_DMS_API_KEY
+        scope: build,runtime
+      - key: DHA_VISA_API_KEY
+        scope: build,runtime
+      - key: DHA_MCS_API_KEY
+        scope: build,runtime
+      - key: DHA_ABIS_API_KEY
+        scope: build,runtime
+      - key: HANIS_API_KEY
+        scope: build,runtime
+    
+    # Health check
+    healthCheckPath: /api/health
+    
+    # Auto-deploy
+    autoDeploy: true
+    
+    # Build configuration
+    buildFilter:
+      paths:
+        - "server/**"
+        - "attached_assets/**"
+        - "package.json"
+        - "package-lock.json"

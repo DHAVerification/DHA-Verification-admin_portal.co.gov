@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 echo "🚀 Starting DHA Back Office Server..."

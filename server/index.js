@@ -9,12 +9,18 @@ import rateLimit from 'express-rate-limit';
 import crypto from 'crypto';
 import QRCode from 'qrcode';
 import puppeteer from 'puppeteer';
+import { config, validateConfig, logConfigStatus } from './config/secrets.js';
+import { getAllPermits, findPermitByNumber, getPermitCount } from './services/permit-service.js';
+import permitsRouter from './routes/permits.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+validateConfig();
+logConfigStatus();
+
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = config.port;
 
 // Security & Performance Middleware
 app.use(helmet({
@@ -45,203 +51,6 @@ app.use('/public', express.static(path.join(__dirname, '../attached_assets'), {
   }
 }));
 
-// Sample permit data - All 13 records
-const permits = [
-  // Permanent Residence - 8 records
-  {
-    id: 1,
-    name: "Muhammad Hasnain Younis",
-    passport: "AV6905864",
-    type: "Permanent Residence",
-    issueDate: "2025-10-16",
-    expiryDate: "Indefinite",
-    status: "Issued",
-    permitNumber: "PR/PTA/2025/10/16789",
-    nationality: "Pakistani",
-    category: "Section 19(1) Critical Skills",
-    officerName: "M. Naidoo",
-    officerID: "DHA-BO-2025-001"
-  },
-  {
-    id: 2,
-    name: "Ahmad Nadeem",
-    passport: "LS1158415",
-    type: "Permanent Residence",
-    issueDate: "2025-10-13",
-    expiryDate: "Indefinite",
-    status: "Issued",
-    permitNumber: "PR/PTA/2025/10/13458",
-    nationality: "Pakistani",
-    category: "Critical Skills",
-    officerName: "M. Naidoo",
-    officerID: "DHA-BO-2025-001"
-  },
-  {
-    id: 3,
-    name: "Tasleem Mohsin",
-    passport: "AU0116281",
-    type: "Permanent Residence",
-    issueDate: "2025-10-16",
-    expiryDate: "Indefinite",
-    status: "Issued",
-    permitNumber: "PR/PTA/2025/10/16790",
-    nationality: "Pakistani",
-    category: "Family Reunification",
-    officerName: "M. Naidoo",
-    officerID: "DHA-BO-2025-001"
-  },
-  {
-    id: 4,
-    name: "Qusai Farid Hussein",
-    passport: "Q655884",
-    type: "Permanent Residence",
-    issueDate: "2025-10-16",
-    expiryDate: "Indefinite",
-    status: "Issued",
-    permitNumber: "PR/PTA/2025/10/16792",
-    nationality: "Jordanian",
-    category: "Family Reunification",
-    officerName: "M. Naidoo",
-    officerID: "DHA-BO-2025-001"
-  },
-  {
-    id: 5,
-    name: "Haroon Rashid",
-    passport: "DT9840361",
-    type: "Permanent Residence",
-    issueDate: "2025-10-13",
-    expiryDate: "Indefinite",
-    status: "Issued",
-    permitNumber: "PR/PTA/2025/10/13456",
-    nationality: "Pakistani",
-    category: "Skilled Professional",
-    officerName: "S. Pillay",
-    officerID: "DHA-BO-2025-002"
-  },
-  {
-    id: 6,
-    name: "Khunsha Rashid",
-    passport: "KV4122911",
-    type: "Permanent Residence",
-    issueDate: "2025-10-13",
-    expiryDate: "Indefinite",
-    status: "Issued",
-    permitNumber: "PR/PTA/2025/10/13457",
-    nationality: "Pakistani",
-    category: "Family Reunification",
-    officerName: "S. Pillay",
-    officerID: "DHA-BO-2025-002"
-  },
-  {
-    id: 7,
-    name: "Haris Faisal",
-    passport: "AF8918005",
-    type: "Permanent Residence",
-    issueDate: "2025-10-16",
-    expiryDate: "Indefinite",
-    status: "Issued",
-    permitNumber: "PR/PTA/2025/10/16791",
-    nationality: "Pakistani",
-    category: "Business Investment",
-    officerName: "T. Mbeki",
-    officerID: "DHA-BO-2025-003"
-  },
-  {
-    id: 8,
-    name: "Mohsin Muhammad",
-    passport: "AD0110994",
-    type: "Permanent Residence",
-    issueDate: "2025-10-13",
-    expiryDate: "Indefinite",
-    status: "Issued",
-    permitNumber: "PR/PTA/2025/10/13459",
-    nationality: "Pakistani",
-    category: "Skilled Professional",
-    officerName: "L. Dlamini",
-    officerID: "DHA-BO-2025-004"
-  },
-  // General Work Permit - 1 record
-  {
-    id: 9,
-    name: "Ikram Ibrahim Yusuf Mansuri",
-    passport: "I0611989",
-    type: "General Work Permit",
-    issueDate: "2025-10-13",
-    expiryDate: "2028-10-13",
-    status: "Issued",
-    permitNumber: "WP/PTA/2025/10/13001",
-    nationality: "Indian",
-    category: "Critical Skills Work Permit",
-    officerName: "S. Pillay",
-    officerID: "DHA-BO-2025-002"
-  },
-  // Relative's Permit - 1 record
-  {
-    id: 10,
-    name: "Anisha Ikram Mansuri",
-    passport: "U8725055",
-    type: "Relative's Permit",
-    issueDate: "2025-10-13",
-    expiryDate: "2028-10-13",
-    status: "Issued",
-    permitNumber: "REL/PTA/2025/10/13001",
-    nationality: "Indian",
-    category: "Spouse Permit",
-    officerName: "S. Pillay",
-    officerID: "DHA-BO-2025-002"
-  },
-  // Birth Certificate - 1 record
-  {
-    id: 11,
-    surname: "ALLY",
-    forename: "ZANEERAH",
-    type: "Birth Certificate",
-    issueDate: "2014-03-21",
-    expiryDate: "N/A",
-    status: "Issued",
-    referenceNumber: "F7895390",
-    identityNumber: "1403218075080",
-    gender: "FEMALE",
-    dateOfBirth: "21 MAR 2014",
-    placeOfBirth: "JOHANNESBURG",
-    countryOfBirth: "SOUTH AFRICA",
-    nationality: "South African",
-    category: "Birth Registration",
-    officerName: "M. Naidoo",
-    officerID: "DHA-BO-2025-001"
-  },
-  // Naturalization Certificate - 1 record
-  {
-    id: 12,
-    name: "Anna Munaf",
-    idNumber: "8508251583187",
-    type: "Naturalization Certificate",
-    issueDate: "2025-10-16",
-    expiryDate: "Permanent",
-    status: "Issued",
-    permitNumber: "NAT/PTA/2025/10/16001",
-    nationality: "South African",
-    category: "Citizenship by Naturalization",
-    officerName: "T. Mbeki",
-    officerID: "DHA-BO-2025-003"
-  },
-  // Refugee Permit - 1 record
-  {
-    id: 13,
-    name: "Faati Abdurahman Isa",
-    passport: "PTAERIO000020215",
-    type: "Refugee Status (Section 24)",
-    issueDate: "2025-10-13",
-    expiryDate: "2029-10-13",
-    status: "Issued",
-    permitNumber: "REF/PTA/2025/10/13001",
-    fileNumber: "PTAERIO000020215",
-    nationality: "Eritrean",
-    category: "4-Year Refugee Permit",
-    officerName: "L. Dlamini",
-    officerID: "DHA-BO-2025-004"
-  }
-];
 
 // Root route - serve main back office interface
 app.get('/', (req, res) => {
@@ -283,42 +92,53 @@ app.get('/e-visa', (req, res) => {
   res.sendFile(path.join(__dirname, '../attached_assets/e-visa_1763213840475.html'));
 });
 
+// Permit Profile route
+app.get('/permit-profile', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.sendFile(path.join(__dirname, '../attached_assets/permit-profile.html'));
+});
+
+// Use permits router
+app.use('/api/permits', permitsRouter);
+
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  const permitCount = await getPermitCount();
+  const { apiHealthMonitor } = await import('./services/api-health-monitor.js');
+  const apiHealth = apiHealthMonitor.getHealthReport();
+  
   res.json({
     status: 'ok',
     service: 'DHA Back Office',
-    permits: permits.length,
-    environment: process.env.NODE_ENV || 'production',
+    permits: permitCount,
+    environment: config.env,
+    productionMode: config.production.useProductionApis,
+    forceRealApis: config.production.forceRealApis,
+    verificationLevel: config.production.verificationLevel,
+    apiHealth: apiHealth,
+    dataSource: apiHealthMonitor.isHealthy() ? 'DHA Production APIs' : 'Verified Fallback Data',
     timestamp: new Date().toISOString()
   });
 });
 
-// Get all permits
-app.get('/api/permits', (req, res) => {
-  res.json({
-    success: true,
-    count: permits.length,
-    permits: permits
-  });
-});
-
 // Validate permit endpoint
-app.post('/api/validate-permit', (req, res) => {
+app.post('/api/validate-permit', async (req, res) => {
   const { permitNumber } = req.body;
-  const permit = permits.find(p => p.permitNumber === permitNumber);
+  const permit = await findPermitByNumber(permitNumber);
   
   if (permit) {
     res.json({
       success: true,
       valid: true,
-      permit: permit
+      permit: permit,
+      verifiedBy: config.production.verificationLevel,
+      realTimeValidation: config.production.realTimeValidation
     });
   } else {
     res.json({
       success: true,
       valid: false,
-      message: 'Permit not found'
+      message: 'Permit not found in DHA database'
     });
   }
 });
@@ -343,7 +163,7 @@ app.post('/api/generate-pdf', async (req, res) => {
       issueDate: permitData.issueDate
     });
     const signature = crypto
-      .createHmac('sha256', process.env.DOCUMENT_SIGNING_KEY || 'dha-digital-signature-key-2025')
+      .createHmac('sha256', config.document.signingKey)
       .update(signatureData)
       .digest('hex');
 
@@ -353,6 +173,7 @@ app.post('/api/generate-pdf', async (req, res) => {
     // Launch Puppeteer
     const browser = await puppeteer.launch({
       headless: true,
+      executablePath: config.puppeteer.executablePath,
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     });
 
@@ -484,17 +305,20 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', async () => {
+  const permitCount = await getPermitCount();
   console.log('========================================');
   console.log('🏛️  DHA BACK OFFICE SYSTEM');
   console.log('========================================');
   console.log(`🚀 Server: http://0.0.0.0:${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'production'}`);
-  console.log(`📄 Permits: ${permits.length}`);
-  console.log(`✅ All 13 certificates available`);
-  console.log(`🔒 Production mode: ENABLED`);
-  console.log(`📋 Validation API: CONNECTED`);
+  console.log(`📊 Environment: ${config.env}`);
+  console.log(`📄 Permits: ${permitCount}`);
+  console.log(`✅ All ${permitCount} certificates available`);
+  console.log(`🔒 Production mode: ${config.production.useProductionApis ? 'ENABLED' : 'DISABLED'}`);
+  console.log(`🔥 Force Real APIs: ${config.production.forceRealApis ? 'ENABLED' : 'DISABLED'}`);
+  console.log(`📋 Validation API: ${config.production.realTimeValidation ? 'CONNECTED' : 'OFFLINE'}`);
   console.log(`🛡️  Security: QR Codes, Digital Signatures, Watermarks`);
+  console.log(`🔐 Verification Level: ${config.production.verificationLevel}`);
   console.log('========================================');
 });
 

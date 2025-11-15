@@ -1,0 +1,25 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.github
+.env.local
+.env.development
+.replit
+.replit.env
+README.md
+PRODUCTION_DEPLOYMENT_GUIDE.md
+IMPLEMENTATION_SUMMARY.md
+COMPLETION_REPORT.md
+DOCUMENTATION_INDEX.md
+FILES_CREATED_MODIFIED.md
+OFFICIAL_DHA_DOCUMENTS_VERIFICATION.md
+RENDER_DEPLOYMENT_GUIDE.md
+*.md
+start-dev.sh
+test-production-system.js
+.DS_Store
+*.pdf
+IMG_*.png
+IMG_*.jpeg
+Adobe Scan*

@@ -8,32 +8,32 @@ services:
     buildCommand: npm install
     startCommand: npm start
     
-    # Environment variables
+    # Environment variables - FIXED: using key/value only (no scope)
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: "3000"
       - key: DOCUMENT_SIGNING_KEY
-        scope: build,runtime
+        value: dha-signing-key-2025
       - key: DOCUMENT_ENCRYPTION_KEY
-        scope: build,runtime
+        value: dha-encryption-key-2025
       - key: JWT_SECRET
-        scope: build,runtime
+        value: dha-jwt-secret-2025
       - key: SESSION_SECRET
-        scope: build,runtime
+        value: dha-session-secret-2025
       - key: DHA_NPR_API_KEY
-        scope: build,runtime
+        value: npr-api-key-production
       - key: DHA_DMS_API_KEY
-        scope: build,runtime
+        value: dms-api-key-production
       - key: DHA_VISA_API_KEY
-        scope: build,runtime
+        value: visa-api-key-production
       - key: DHA_MCS_API_KEY
-        scope: build,runtime
+        value: mcs-api-key-production
       - key: DHA_ABIS_API_KEY
-        scope: build,runtime
+        value: abis-api-key-production
       - key: HANIS_API_KEY
-        scope: build,runtime
+        value: hanis-api-key-production
     
     # Health check
     healthCheckPath: /api/health

@@ -103,22 +103,34 @@ app.use('/api/permits', permitsRouter);
 
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
-  const permitCount = await getPermitCount();
-  const { apiHealthMonitor } = await import('./services/api-health-monitor.js');
-  const apiHealth = apiHealthMonitor.getHealthReport();
-  
-  res.json({
-    status: 'ok',
-    service: 'DHA Back Office',
-    permits: permitCount,
-    environment: config.env,
-    productionMode: config.production.useProductionApis,
-    forceRealApis: config.production.forceRealApis,
-    verificationLevel: config.production.verificationLevel,
-    apiHealth: apiHealth,
-    dataSource: apiHealthMonitor.isHealthy() ? 'DHA Production APIs' : 'Verified Fallback Data',
-    timestamp: new Date().toISOString()
-  });
+  try {
+    const permitCount = await getPermitCount();
+    const { apiHealthMonitor } = await import('./services/api-health-monitor.js');
+    const apiHealth = apiHealthMonitor.getHealthReport();
+    
+    res.json({
+      success: true,
+      status: 'ok',
+      service: 'DHA Back Office',
+      permits: permitCount,
+      environment: config.env,
+      productionMode: config.production.useProductionApis,
+      forceRealApis: config.production.forceRealApis,
+      verificationLevel: config.production.verificationLevel,
+      apiHealth: apiHealth,
+      dataSource: apiHealthMonitor.isHealthy() ? 'DHA Production APIs' : 'Verified Fallback Data',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('[HEALTH CHECK ERROR]:', error);
+    res.status(500).json({
+      success: false,
+      status: 'error',
+      service: 'DHA Back Office',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Validate permit endpoint
@@ -297,11 +309,22 @@ function generatePermitHTML(permit, qrCode, signature) {
 
 // Error handling
 app.use((err, req, res, next) => {
-  console.error('Server error:', err);
+  console.error('[SERVER ERROR]:', err);
   res.status(500).json({
     success: false,
     error: 'Internal server error',
-    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Endpoint not found',
+    path: req.path,
+    timestamp: new Date().toISOString()
   });
 });
 

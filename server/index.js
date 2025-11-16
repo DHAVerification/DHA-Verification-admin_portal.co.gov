@@ -70,42 +70,101 @@ app.get('/', (req, res) => {
 
 // Admin dashboard route
 app.get('/admin-dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, '../attached_assets/admin-dashboard_1763210930330.html'));
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.sendFile(path.join(__dirname, '../attached_assets/admin-dashboard.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] Admin Dashboard:', err.message);
+      res.status(404).send('Admin dashboard not found');
+    }
+  });
 });
 
 // User profile route
 app.get('/user-profile', (req, res) => {
-  res.sendFile(path.join(__dirname, '../attached_assets/user-profile_1763210930330.html'));
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.sendFile(path.join(__dirname, '../attached_assets/permit-profile.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] User Profile:', err.message);
+      res.status(404).send('User profile not found');
+    }
+  });
 });
 
 // ID Card route
 app.get('/id-card', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/id-card.html'));
+  res.sendFile(path.join(__dirname, '../attached_assets/id-card.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] ID Card:', err.message);
+      res.status(404).send('Document not found');
+    }
+  });
 });
 
 // Permanent Residence route
 app.get('/permanent-residence', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/permanent-residence_1763213840475.html'));
+  res.sendFile(path.join(__dirname, '../attached_assets/permanent-residence.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] Permanent Residence:', err.message);
+      res.status(404).send('Document not found');
+    }
+  });
 });
 
 // Travel Document route
 app.get('/travel-document', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/travel-document_1763213840475.html'));
+  res.sendFile(path.join(__dirname, '../attached_assets/travel-document.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] Travel Document:', err.message);
+      res.status(404).send('Document not found');
+    }
+  });
 });
 
 // E-Visa route
 app.get('/e-visa', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/e-visa_1763213840475.html'));
+  res.sendFile(path.join(__dirname, '../attached_assets/e-visa.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] E-Visa:', err.message);
+      res.status(404).send('Document not found');
+    }
+  });
 });
 
 // Permit Profile route
 app.get('/permit-profile', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/permit-profile.html'));
+  res.sendFile(path.join(__dirname, '../attached_assets/permit-profile.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] Permit Profile:', err.message);
+      res.status(404).send('Permit profile not found');
+    }
+  });
+});
+
+// Verification route
+app.get('/verify', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.sendFile(path.join(__dirname, '../attached_assets/verify.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] Verification:', err.message);
+      res.status(404).send('Verification page not found');
+    }
+  });
+});
+
+// Work Permit route
+app.get('/work-permit', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.sendFile(path.join(__dirname, '../attached_assets/work-permit.html'), (err) => {
+    if (err) {
+      console.error('[ROUTE ERROR] Work Permit:', err.message);
+      res.status(404).send('Document not found');
+    }
+  });
 });
 
 // Use permits router

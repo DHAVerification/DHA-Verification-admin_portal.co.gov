@@ -183,7 +183,7 @@ async function generatePermanentResidencePDF(doc, permit) {
   const baseUrl = process.env.RENDER_EXTERNAL_URL || 
                   (process.env.REPL_SLUG ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000');
   const verificationUrl = `${baseUrl}/api/permits/${permit.id}/verify-document`;
-  
+
   // Generate QR code synchronously before ending document
   try {
     const qrDataUrl = await QRCode.toDataURL(verificationUrl, { width: 100, margin: 1, errorCorrectionLevel: 'H' });

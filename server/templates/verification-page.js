@@ -353,7 +353,7 @@ export function generateVerificationPage(permit) {
                 <strong>⚠️ OFFICIAL VERIFICATION NOTICE</strong><br>
                 This is an official verification page from the Department of Home Affairs, Republic of South Africa. 
                 The document details below have been verified against the National Population Register (NPR) and official DHA databases.
-                This verification is valid as of ${new Date().toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' })}.
+                This verification is valid as of ${permit.issueDate || new Date().toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' })}.
             </div>
         </div>
         
@@ -424,13 +424,6 @@ export function generateVerificationPage(permit) {
                 <div class="qr-text">Scan to verify on official DHA website</div>
             </div>
             
-            <div class="verification-links">
-                <h3>🔗 Official Verification Links</h3>
-                <a href="${verificationUrl}" class="verification-link" target="_blank">
-                    🌐 Verify on DHA Official Website →
-                </a>
-            </div>
-            
             <div style="background: #f5f5f5; padding: 35px; margin-top: 40px; border-top: 4px solid #007a3d;">
                 <h3 style="color: #007a3d; font-size: 16px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700;">
                     Official Verification Status
@@ -441,7 +434,7 @@ export function generateVerificationPage(permit) {
                     </div>
                     <div style="font-size: 14px; color: #212529; line-height: 1.8;">
                         This ${permit.type} has been authenticated against official DHA records.<br>
-                        <strong>Verification Date:</strong> ${new Date().toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' })}<br>
+                        <strong>Verification Date:</strong> ${permit.issueDate || new Date().toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' })}<br>
                         <strong>Status:</strong> ${validityStatus}<br>
                         <strong>System:</strong> National Population Register (NPR)
                     </div>

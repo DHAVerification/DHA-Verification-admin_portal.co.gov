@@ -302,33 +302,61 @@ async function generatePermanentResidencePDF(doc, permit) {
   // Office stamp box (positioned higher and to the right)
   const stampY = y - 35;
   const stampX = 310;
+  
+  // Background pattern for stamp
+  doc.save();
+  doc.opacity(0.05);
+  // Diagonal lines pattern
+  for (let i = 0; i < 15; i++) {
+    doc.moveTo(stampX + (i * 15), stampY)
+       .lineTo(stampX + (i * 15) + 100, stampY + 100)
+       .stroke('#CC0000');
+  }
+  doc.restore();
+  
+  // Light background fill
+  doc.save();
+  doc.opacity(0.03);
+  doc.rect(stampX, stampY, 225, 100).fill('#FFE6E6');
+  doc.restore();
+  
+  // Double border
   doc.rect(stampX, stampY, 225, 100).stroke('#CC0000');
-  doc.rect(stampX + 1, stampY + 1, 223, 98).stroke('#CC0000'); // Double border
+  doc.rect(stampX + 1, stampY + 1, 223, 98).stroke('#CC0000');
+  
+  // Coat of arms at top of stamp
+  if (imageExists(coatOfArmsPath)) {
+    try {
+      doc.image(coatOfArmsPath, stampX + 85, stampY + 8, { width: 50, height: 50 });
+    } catch (error) {
+      // Continue without coat of arms
+    }
+  }
+  
+  doc.fontSize(7)
+     .font('Helvetica-Oblique')
+     .fillColor('#CC0000')
+     .text('Office stamp', stampX + 82, stampY + 62);
   
   doc.fontSize(9)
-     .font('Helvetica')
-     .fillColor('#CC0000')
-     .text('Office stamp', stampX + 75, stampY + 10);
-  
-  doc.fontSize(10)
      .font('Helvetica-Bold')
      .fillColor('#CC0000')
-     .text('DEPARTMENT OF HOME AFFAIRS', stampX + 25, stampY + 28);
+     .text('DEPARTMENT OF HOME AFFAIRS', stampX + 30, stampY + 72);
   
-  doc.fontSize(9)
+  doc.fontSize(8)
      .font('Helvetica-Bold')
-     .text('PRIVATE BAG X114', stampX + 60, stampY + 48);
+     .text('PRIVATE BAG X114', stampX + 65, stampY + 84);
   
   y += 5;
-  doc.fontSize(9)
+  doc.fontSize(8)
      .font('Helvetica-Bold')
      .fillColor('#CC0000')
-     .text('PRETORIA  0001', stampX + 65, stampY + 65);
+     .text('Makhosini', stampX + 75, stampY + 94);
   
-  doc.fontSize(12)
-     .font('Helvetica-Bold')
+  doc.fontSize(6)
+     .font('Helvetica')
      .fillColor('#CC0000')
-     .text('07', stampX + 105, stampY + 80);
+     .text('PRETORIA  0001', stampX + 73, stampY + 103);
 
   // Signature section (left side)
   const sigY = y + 45;

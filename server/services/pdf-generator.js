@@ -59,25 +59,46 @@ export async function generatePermitPDF(permit) {
 }
 
 function drawDHAHeader(doc, documentTitle) {
-  doc.fillColor('#006600')
-     .fontSize(20)
+  // Try to add official coat of arms
+  const coatOfArmsPath = path.join(__dirname, '../../attached_assets/images/coat-of-arms.png');
+  if (imageExists(coatOfArmsPath)) {
+    try {
+      doc.image(coatOfArmsPath, 460, 45, { width: 60, height: 60 });
+    } catch (error) {
+      console.log('Could not load coat of arms image:', error.message);
+    }
+  }
+
+  doc.fillColor('#007a3d')
+     .fontSize(22)
      .font('Helvetica-Bold')
-     .text('home affairs', 50, 50, { align: 'left' });
+     .text('DEPARTMENT OF HOME AFFAIRS', 50, 50, { align: 'left' });
 
   doc.fontSize(10)
      .font('Helvetica')
-     .text('Department', 50, 72);
-
-  doc.fontSize(8)
      .fillColor('#333333')
-     .text('REPUBLIC OF SOUTH AFRICA', 400, 50, { align: 'right' });
+     .text('Republic of South Africa', 50, 75);
 
-  doc.moveTo(50, 100).lineTo(545, 100).stroke('#FFD700');
+  // Official government banner
+  doc.rect(50, 95, 495, 3).fill('#007a3d');
+  doc.rect(50, 98, 495, 2).fill('#FFD700');
 
   doc.fontSize(16)
      .font('Helvetica-Bold')
      .fillColor('#000000')
-     .text(documentTitle, 50, 120, { align: 'center', width: 495 });
+     .text(documentTitle, 50, 115, { align: 'center', width: 495 });
+  
+  // Add subtle watermark
+  doc.save();
+  doc.opacity(0.03);
+  if (imageExists(coatOfArmsPath)) {
+    try {
+      doc.image(coatOfArmsPath, 200, 300, { width: 200, height: 200 });
+    } catch (error) {
+      // Continue without watermark if image fails
+    }
+  }
+  doc.restore();
 }
 
 async function generatePermanentResidencePDF(doc, permit) {

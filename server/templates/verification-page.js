@@ -42,6 +42,21 @@ export function generateVerificationPage(permit) {
             background: #f5f5f5;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Coat_of_arms_of_South_Africa.svg/500px-Coat_of_arms_of_South_Africa.svg.png') center/contain no-repeat;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
         }
         
         .container {
@@ -52,13 +67,16 @@ export function generateVerificationPage(permit) {
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             overflow: hidden;
             border: 1px solid #ddd;
+            position: relative;
+            z-index: 1;
         }
         
         .dha-header {
-            background: white;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
             padding: 25px 40px;
-            border-bottom: 3px solid #007a3d;
+            border-bottom: 5px solid #007a3d;
             position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
         .dha-logo-section {
@@ -70,11 +88,12 @@ export function generateVerificationPage(permit) {
         
         .dha-title {
             color: #007a3d;
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 28px;
+            font-weight: 800;
             text-transform: uppercase;
-            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-            letter-spacing: 0.5px;
+            font-family: 'Arial Black', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .dha-subtitle {
@@ -86,10 +105,22 @@ export function generateVerificationPage(permit) {
             font-weight: 500;
         }
         
+        .official-banner {
+            background: linear-gradient(135deg, #007a3d 0%, #005a2d 100%);
+            color: white;
+            padding: 12px 40px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 3px solid #FFD700;
+        }
+        
         .sa-coat-of-arms {
             width: 80px;
             height: 80px;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23006600" stroke="%23FFD700" stroke-width="3"/><text x="50" y="60" text-anchor="middle" font-size="30" fill="%23FFD700" font-weight="bold">RSA</text></svg>') center/contain no-repeat;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Coat_of_arms_of_South_Africa.svg/500px-Coat_of_arms_of_South_Africa.svg.png') center/contain no-repeat;
         }
         
         .rsa-text {
@@ -123,16 +154,31 @@ export function generateVerificationPage(permit) {
         
         .verification-badge {
             background: ${colors.bg};
-            border: 3px solid ${colors.border};
+            border: 4px solid ${colors.border};
             color: ${colors.text};
-            padding: 15px 30px;
+            padding: 18px 35px;
             border-radius: 8px;
-            font-size: 24px;
-            font-weight: 800;
+            font-size: 26px;
+            font-weight: 900;
             display: inline-block;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        
+        .verification-badge::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #FFD700, #FFA500, #FFD700);
+            border-radius: 10px;
+            z-index: -1;
+            opacity: 0.3;
         }
         
         .status-icon {
@@ -330,6 +376,7 @@ export function generateVerificationPage(permit) {
 </head>
 <body>
     <div class="container">
+        <div class="official-banner">Official Government Document - Republic of South Africa</div>
         <div class="dha-header">
             <div class="dha-logo-section">
                 <div>

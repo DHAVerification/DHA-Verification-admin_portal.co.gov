@@ -271,11 +271,23 @@ function generatePermitHTML(permit, qrCode, signature) {
 <head>
   <meta charset="UTF-8">
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-    .header { background: linear-gradient(135deg, #004d00 0%, #006600 100%); color: white; padding: 20px; border-bottom: 4px solid #FFD700; }
-    .flag-strip { background: linear-gradient(to right, #007749 33%, #FFD700 33%, #FFD700 66%, #DE3831 66%); height: 8px; }
-    .seal { width: 80px; height: 80px; border: 3px solid #FFD700; border-radius: 50%; background: white; display: inline-block; }
-    .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 120px; color: rgba(0, 102, 0, 0.05); z-index: -1; white-space: nowrap; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; position: relative; }
+    body::before { 
+      content: ''; 
+      position: fixed; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%); 
+      width: 400px; 
+      height: 400px; 
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Coat_of_arms_of_South_Africa.svg/500px-Coat_of_arms_of_South_Africa.svg.png') center/contain no-repeat; 
+      opacity: 0.03; 
+      z-index: -1; 
+    }
+    .header { background: linear-gradient(135deg, #007a3d 0%, #005a2d 100%); color: white; padding: 25px; border-bottom: 5px solid #FFD700; position: relative; }
+    .official-banner { background: linear-gradient(135deg, #007a3d 0%, #005a2d 100%); color: white; padding: 10px; text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; border-bottom: 3px solid #FFD700; }
+    .coat-of-arms { width: 80px; height: 80px; background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Coat_of_arms_of_South_Africa.svg/500px-Coat_of_arms_of_South_Africa.svg.png') center/contain no-repeat; display: inline-block; float: right; }
+    .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 120px; color: rgba(0, 122, 61, 0.04); z-index: -1; white-space: nowrap; font-weight: 900; }
     .content { margin-top: 30px; }
     .field { margin: 15px 0; }
     .label { font-weight: bold; color: #006600; text-transform: uppercase; font-size: 11px; }
@@ -286,14 +298,14 @@ function generatePermitHTML(permit, qrCode, signature) {
   </style>
 </head>
 <body>
-  <div class="watermark">DEPARTMENT OF HOME AFFAIRS</div>
+  <div class="watermark">DEPARTMENT OF HOME AFFAIRS • REPUBLIC OF SOUTH AFRICA</div>
   
-  <div class="flag-strip"></div>
+  <div class="official-banner">Official Government Document - Republic of South Africa</div>
   <div class="header">
-    <div class="seal"></div>
-    <h1 style="display: inline-block; margin-left: 20px;">DEPARTMENT OF HOME AFFAIRS</h1>
-    <p>Republic of South Africa</p>
-    <h2>${permit.type}</h2>
+    <div class="coat-of-arms"></div>
+    <h1 style="display: inline-block; font-size: 24px; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">DEPARTMENT OF HOME AFFAIRS</h1>
+    <p style="font-size: 12px; margin-top: 5px; letter-spacing: 1px;">Republic of South Africa</p>
+    <h2 style="border-top: 2px solid rgba(255,255,255,0.3); padding-top: 15px; margin-top: 15px;">${permit.type}</h2>
   </div>
 
   <div class="content">

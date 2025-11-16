@@ -44,16 +44,6 @@ export function generateVerificationPage(permit) {
             padding: 20px;
         }
         
-        .sa-flag-strip {
-            height: 8px;
-            background: linear-gradient(to right, #007749 33%, #FFD700 33%, #FFD700 66%, #DE3831 66%);
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
-        
         .container {
             max-width: 900px;
             margin: 30px auto;
@@ -332,7 +322,6 @@ export function generateVerificationPage(permit) {
     </style>
 </head>
 <body>
-    <div class="sa-flag-strip"></div>
     <div class="container">
         <div class="dha-header">
             <div class="dha-logo-section">

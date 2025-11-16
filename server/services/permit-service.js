@@ -137,18 +137,18 @@ function getFallbackPermits() {
       forename: "MUHAMMAD",
       passport: "AD0110994",
       type: "Permanent Residence",
-      issueDate: "2025-09-12",
+      issueDate: "2025-10-13",
       expiryDate: "Indefinite",
       status: "Issued",
-      permitNumber: "PRP/5829/2025 JHB",
+      permitNumber: "PR/PTA/2025/10/13459",
       referenceNumber: "PRP6296482",
       controlNumber: "A629649",
       nationality: "PAKISTANI",
       dateOfBirth: "23-06-1985",
       gender: "MALE",
-      category: "Section 27(b) Immigration Act 2002",
-      officerName: "Makhode LT",
-      officerID: "8BWWWBURUV",
+      category: "Skilled Professional",
+      officerName: "M. Naidoo",
+      officerID: "DHA-BO-2025-001",
       issuingOffice: "DEPARTMENT OF HOME AFFAIRS, PRETORIA 0001",
       conditions: [
         "This permit is issued once only and must be duly safeguarded.",
@@ -219,8 +219,8 @@ function getFallbackPermits() {
       permitNumber: "PR/PTA/2025/10/13456",
       nationality: "Pakistani",
       category: "Skilled Professional",
-      officerName: "S. Pillay",
-      officerID: "DHA-BO-2025-002"
+      officerName: "M. Naidoo",
+      officerID: "DHA-BO-2025-001"
     },
     {
       id: 6,
@@ -233,8 +233,8 @@ function getFallbackPermits() {
       permitNumber: "PR/PTA/2025/10/13457",
       nationality: "Pakistani",
       category: "Family Reunification",
-      officerName: "S. Pillay",
-      officerID: "DHA-BO-2025-002"
+      officerName: "M. Naidoo",
+      officerID: "DHA-BO-2025-001"
     },
     {
       id: 7,
@@ -247,8 +247,8 @@ function getFallbackPermits() {
       permitNumber: "PR/PTA/2025/10/16791",
       nationality: "Pakistani",
       category: "Business Investment",
-      officerName: "T. Mbeki",
-      officerID: "DHA-BO-2025-003"
+      officerName: "M. Naidoo",
+      officerID: "DHA-BO-2025-001"
     },
     {
       id: 8,

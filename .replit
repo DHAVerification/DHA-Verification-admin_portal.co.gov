@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "bash"]
+modules = ["bash", "nodejs-20", "web"]
 [agent]
 expertMode = true
 
@@ -52,6 +52,10 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "bash start-dev.sh"
+
+[[ports]]
+localPort = 3000
+externalPort = 5173
 
 [[ports]]
 localPort = 5000

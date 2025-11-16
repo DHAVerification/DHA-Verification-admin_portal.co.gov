@@ -1,3 +1,4 @@
+
 import PDFDocument from 'pdfkit';
 import QRCode from 'qrcode';
 import { DocumentVerificationService } from './document-verification.js';
@@ -23,7 +24,7 @@ const imageExists = (filePath) => {
 };
 
 export async function generatePermitPDF(permit) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const doc = new PDFDocument({ 
         size: 'A4',
@@ -36,19 +37,19 @@ export async function generatePermitPDF(permit) {
       doc.on('error', reject);
 
       if (permit.type === 'Permanent Residence') {
-        generatePermanentResidencePDF(doc, permit);
+        await generatePermanentResidencePDF(doc, permit);
       } else if (permit.type === 'General Work Permit') {
-        generateWorkPermitPDF(doc, permit);
+        await generateWorkPermitPDF(doc, permit);
       } else if (permit.type === "Relative's Permit") {
-        generateRelativesPermitPDF(doc, permit);
+        await generateRelativesPermitPDF(doc, permit);
       } else if (permit.type === 'Birth Certificate') {
-        generateBirthCertificatePDF(doc, permit);
+        await generateBirthCertificatePDF(doc, permit);
       } else if (permit.type === 'Naturalization Certificate') {
-        generateNaturalizationPDF(doc, permit);
+        await generateNaturalizationPDF(doc, permit);
       } else if (permit.type === 'Refugee Status (Section 24)') {
-        generateRefugeePDF(doc, permit);
+        await generateRefugeePDF(doc, permit);
       } else {
-        generateGenericPermitPDF(doc, permit);
+        await generateGenericPermitPDF(doc, permit);
       }
 
       doc.end();
@@ -59,144 +60,413 @@ export async function generatePermitPDF(permit) {
 }
 
 function drawDHAHeader(doc, documentTitle) {
-  doc.fillColor('#006600')
-     .fontSize(20)
+  // Try to add official coat of arms
+  const coatOfArmsPath = path.join(__dirname, '../../attached_assets/images/coat-of-arms.png');
+  if (imageExists(coatOfArmsPath)) {
+    try {
+      doc.image(coatOfArmsPath, 460, 45, { width: 60, height: 60 });
+    } catch (error) {
+      console.log('Could not load coat of arms image:', error.message);
+    }
+  }
+
+  doc.fillColor('#007a3d')
+     .fontSize(22)
      .font('Helvetica-Bold')
-     .text('home affairs', 50, 50, { align: 'left' });
+     .text('DEPARTMENT OF HOME AFFAIRS', 50, 50, { align: 'left' });
 
   doc.fontSize(10)
      .font('Helvetica')
-     .text('Department', 50, 72);
-
-  doc.fontSize(8)
      .fillColor('#333333')
-     .text('REPUBLIC OF SOUTH AFRICA', 400, 50, { align: 'right' });
+     .text('Republic of South Africa', 50, 75);
 
-  doc.moveTo(50, 100).lineTo(545, 100).stroke('#FFD700');
+  // Official government banner
+  doc.rect(50, 95, 495, 3).fill('#007a3d');
+  doc.rect(50, 98, 495, 2).fill('#FFD700');
 
   doc.fontSize(16)
      .font('Helvetica-Bold')
      .fillColor('#000000')
-     .text(documentTitle, 50, 120, { align: 'center', width: 495 });
+     .text(documentTitle, 50, 115, { align: 'center', width: 495 });
+  
+  // Add subtle watermark
+  doc.save();
+  doc.opacity(0.03);
+  if (imageExists(coatOfArmsPath)) {
+    try {
+      doc.image(coatOfArmsPath, 200, 300, { width: 200, height: 200 });
+    } catch (error) {
+      // Continue without watermark if image fails
+    }
+  }
+  doc.restore();
 }
 
-function generatePermanentResidencePDF(doc, permit) {
-  drawDHAHeader(doc, 'PERMANENT RESIDENCE PERMIT');
-
-  doc.fontSize(8)
-     .fillColor('#333333')
-     .text('SECTIONS 26 AND 27 OF ACT NO 13 OF 2002', 50, 150, { align: 'center', width: 495 });
-
-  let y = 175;
-
-  // Try to include template image
-  const permanentResidenceImagePath = getImagePath('permanent-residence', 'template.png');
-  if (imageExists(permanentResidenceImagePath)) {
+async function generatePermanentResidencePDF(doc, permit) {
+  // Background - Light beige/cream texture
+  doc.rect(0, 0, 595, 842).fill('#F5F3E8');
+  
+  // Subtle watermark pattern
+  doc.save();
+  doc.opacity(0.015);
+  const coatOfArmsPath = path.join(__dirname, '../../attached_assets/images/coat-of-arms.png');
+  if (imageExists(coatOfArmsPath)) {
     try {
-      doc.image(permanentResidenceImagePath, 50, 175, { width: 200, height: 150 });
-      y = 350;
+      doc.image(coatOfArmsPath, 220, 350, { width: 180, height: 180 });
     } catch (error) {
-      console.log('Could not load permanent residence image:', error.message);
+      // Continue without watermark
+    }
+  }
+  doc.restore();
+
+  // Header - Official DHA Coat of Arms (top left)
+  if (imageExists(coatOfArmsPath)) {
+    try {
+      doc.image(coatOfArmsPath, 50, 40, { width: 70, height: 70 });
+    } catch (error) {
+      console.log('Could not load coat of arms:', error.message);
     }
   }
 
-  // Permit Number and Reference Number
-  doc.fontSize(9).fillColor('#000000').font('Helvetica-Bold');
-  doc.text('PERMIT NUMBER', 50, y);
-  doc.font('Helvetica').text(permit.permitNumber || 'N/A', 200, y);
+  // DHA Branding - right side of header
+  doc.fontSize(18)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('home affairs', 140, 45);
+  
+  doc.fontSize(9)
+     .font('Helvetica')
+     .fillColor('#333333')
+     .text('Department', 140, 68)
+     .text('Home Affairs', 140, 80)
+     .text('REPUBLIC OF SOUTH AFRICA', 140, 92);
 
-  y += 18;
-  doc.font('Helvetica-Bold').text('REFERENCE NO', 50, y);
-  doc.font('Helvetica').text(permit.referenceNumber || permit.permitNumber, 200, y);
+  // Document number in top right corner
+  doc.fontSize(11)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('DHA-802', 500, 45);
 
-  y += 25;
-  doc.fontSize(8).fillColor('#333333').font('Helvetica')
-     .text('In terms of the provisions of section 27(b) of the Immigration Act 2002 (Act No 13 of 2002)', 50, y, { width: 495 });
+  let y = 130;
 
-  y += 35;
-
-  // Personal Details
-  doc.fontSize(9).fillColor('#000000').font('Helvetica-Bold');
-  doc.text('Surname', 50, y);
-  doc.font('Helvetica').text((permit.surname || permit.name?.split(' ').pop() || 'N/A').toUpperCase(), 200, y);
-
-  y += 18;
-  doc.font('Helvetica-Bold').text('First Name(s)', 50, y);
-  const firstName = permit.forename || permit.name?.split(' ').slice(0, -1).join(' ') || 'N/A';
-  doc.font('Helvetica').text(firstName.toUpperCase(), 200, y);
-
-  y += 18;
-  doc.font('Helvetica-Bold').text('Nationality', 50, y);
-  doc.font('Helvetica').text((permit.nationality || 'N/A').toUpperCase(), 200, y);
-
-  y += 18;
-  doc.font('Helvetica-Bold').text('Date of Birth', 50, y);
-  doc.font('Helvetica').text(permit.dateOfBirth || 'N/A', 200, y);
-
-  y += 18;
-  doc.font('Helvetica-Bold').text('Gender', 50, y);
-  doc.font('Helvetica').text(permit.gender || 'N/A', 200, y);
-
-  y += 30;
-  doc.fontSize(8).fillColor('#333333').font('Helvetica')
-     .text('has been authorised to enter the Republic of South Africa for the purpose of taking up permanent residence', 50, y, { width: 495 });
-
+  // Title
+  doc.fontSize(15)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('PERMANENT RESIDENCE PERMIT', 50, y, { align: 'left' });
+  
   y += 20;
-  doc.text('or date of approval of application, already sojourning therein legally, to reside permanently.', 50, y, { width: 495 });
+  doc.fontSize(8)
+     .font('Helvetica')
+     .fillColor('#666666')
+     .text('SECTIONS 26 AND 27 OF ACT NO. 13 OF 2002', 50, y);
 
-  y += 35;
+  y += 40;
 
-  // Date of Issue
-  doc.fontSize(9).fillColor('#000000').font('Helvetica-Bold');
-  doc.text('Date of Issue', 50, y);
-  doc.font('Helvetica').text(permit.issueDate || 'N/A', 200, y);
+  // Two-column layout for permit details
+  const leftCol = 50;
+  const rightCol = 340;
+
+  // PERMIT NUMBER (left) and REFERENCE NO (right) on same line
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('PERMIT NUMBER', leftCol, y);
+  
+  doc.text('REFERENCE NO', rightCol, y);
+
+  // Draw underlines for both fields
+  doc.moveTo(leftCol, y + 28).lineTo(leftCol + 250, y + 28).stroke('#000000');
+  doc.moveTo(rightCol, y + 28).lineTo(rightCol + 205, y + 28).stroke('#000000');
+
+  doc.fontSize(10)
+     .font('Helvetica')
+     .text(permit.permitNumber || '', leftCol, y + 18);
+  
+  doc.text(permit.referenceNumber || permit.permitNumber || '', rightCol, y + 18);
 
   y += 50;
 
-  // Authorized by
-  doc.font('Helvetica-Bold').text('Authorized by:', 50, y);
-  doc.font('Helvetica').text(permit.officerName || 'Makhode LT', 200, y);
+  // Legal text
+  doc.fontSize(8)
+     .font('Helvetica')
+     .fillColor('#000000')
+     .text('In terms of the provisions of section 27(b) of the Immigration Act, 2002 (Act No. 13 of 2002),', 50, y, { width: 495 });
 
-  y += 15;
-  doc.fontSize(7).fillColor('#666666');
-  doc.text('Department of Home Affairs', 50, y);
-  doc.text('PRETORIA 0001', 50, y + 10);
+  y += 25;
 
-  y += 60;
-
-  // Conditions
-  doc.fontSize(8).fillColor('#000000').font('Helvetica-Bold');
-  doc.text('Conditions:', 50, y);
-  doc.font('Helvetica').fontSize(7).fillColor('#333333');
-  y += 12;
-  doc.text('(i) This permit is issued once only and must be duly safeguarded.', 50, y, { width: 495 });
-  y += 18;
-  doc.text('(ii) Permanent residents who are absent from the Republic for three years or longer may forfeit their right to', 50, y, { width: 495 });
-  y += 10;
-  doc.text('permanent residence in the Republic.', 54, y, { width: 495 });
-
-  // Control Number at bottom
-  doc.fontSize(8).fillColor('#333333')
-     .text(`Control Number: ${permit.controlNumber || 'A629649'}`, 50, 750);
-
-  // Generate and embed QR Code with verification
-  const verificationUrl = `${process.env.REPL_SLUG ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000'}/api/permits/${permit.id}/verify-document`;
+  // Surname
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('Surname', leftCol, y);
   
-  QRCode.toDataURL(verificationUrl, { width: 100, margin: 1, errorCorrectionLevel: 'H' })
-    .then(qrDataUrl => {
-      try {
-        const qrImage = Buffer.from(qrDataUrl.split(',')[1], 'base64');
-        doc.image(qrImage, 450, 200, { width: 80 });
-        // Add verification label
-        doc.fontSize(7).fillColor('#006600').text('SCAN TO VERIFY', 450, 290, { width: 80, align: 'center' });
-      } catch (error) {
-        console.error('Error embedding QR code:', error);
-      }
-    })
-    .catch(error => console.error('QR code generation failed:', error));
+  doc.moveTo(leftCol, y + 28).lineTo(545, y + 28).stroke('#000000');
+  
+  doc.fontSize(10)
+     .font('Helvetica')
+     .text((permit.surname || permit.name?.split(' ').pop() || '').toUpperCase(), leftCol, y + 18, { width: 495 });
+
+  y += 45;
+
+  // Maiden Surname
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .text('Maiden Surname', leftCol, y);
+  
+  doc.moveTo(leftCol, y + 28).lineTo(545, y + 28).stroke('#000000');
+  
+  doc.fontSize(10)
+     .font('Helvetica')
+     .text((permit.maidenSurname || '').toUpperCase(), leftCol, y + 18, { width: 495 });
+
+  y += 45;
+
+  // First Name(s)
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .text('First Name (s)', leftCol, y);
+  
+  doc.moveTo(leftCol, y + 28).lineTo(545, y + 28).stroke('#000000');
+  
+  const firstName = permit.forename || permit.name?.split(' ').slice(0, -1).join(' ') || '';
+  doc.fontSize(10)
+     .font('Helvetica')
+     .text(firstName.toUpperCase(), leftCol, y + 18, { width: 495 });
+
+  y += 45;
+
+  // Nationality
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .text('Nationality', leftCol, y);
+  
+  doc.moveTo(leftCol, y + 28).lineTo(545, y + 28).stroke('#000000');
+  
+  doc.fontSize(10)
+     .font('Helvetica')
+     .text((permit.nationality || '').toUpperCase(), leftCol, y + 18);
+
+  y += 45;
+
+  // Date of birth and Gender on same line
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .text('Date of birth', leftCol, y);
+  
+  doc.text('Gender', rightCol, y);
+
+  doc.moveTo(leftCol, y + 28).lineTo(leftCol + 250, y + 28).stroke('#000000');
+  doc.moveTo(rightCol, y + 28).lineTo(545, y + 28).stroke('#000000');
+
+  doc.fontSize(10)
+     .font('Helvetica')
+     .text(permit.dateOfBirth || '', leftCol, y + 18);
+  
+  doc.text((permit.gender || '').toUpperCase(), rightCol, y + 18);
+
+  y += 45;
+
+  // Authorization text
+  doc.fontSize(8)
+     .font('Helvetica')
+     .fillColor('#000000')
+     .text('has been authorised to enter the Republic of South Africa for the purpose of taking up permanent residence, or if he/she on', 50, y, { width: 495 });
+  
+  y += 12;
+  doc.text('the date of approval of application, already sojourns therein legally, to reside permanently. Unless the holder of this permit', 50, y, { width: 495 });
+  
+  y += 12;
+  doc.text('enters the Republic of South Africa for the purpose of permanent residence', 50, y, { width: 495 });
+  
+  y += 12;
+  const expiryText = 'before or on _____________ the permanent residence permit shall lapse.';
+  doc.text(expiryText, 50, y, { width: 495 });
+
+  y += 40;
+
+  // Date of issue
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('Date of issue', leftCol, y);
+  
+  doc.moveTo(leftCol + 80, y + 18).lineTo(leftCol + 200, y + 18).stroke('#000000');
+  
+  doc.fontSize(10)
+     .font('Helvetica')
+     .text(permit.issueDate || '', leftCol + 80, y + 8);
+
+  y += 50;
+
+  // Office stamp box (positioned to match official format)
+  const stampY = y - 35;
+  const stampX = 310;
+  
+  // Background security pattern (more visible)
+  doc.save();
+  doc.opacity(0.08);
+  // Diagonal lines pattern
+  for (let i = 0; i < 20; i++) {
+    doc.moveTo(stampX + (i * 12), stampY)
+       .lineTo(stampX + (i * 12) + 100, stampY + 100)
+       .stroke('#CC0000');
+  }
+  doc.restore();
+  
+  // Light red background fill
+  doc.save();
+  doc.opacity(0.05);
+  doc.rect(stampX, stampY, 225, 100).fill('#FFE6E6');
+  doc.restore();
+  
+  // Double red border - exact match
+  doc.strokeColor('#CC0000').lineWidth(1.5);
+  doc.rect(stampX, stampY, 225, 100).stroke();
+  doc.rect(stampX + 2, stampY + 2, 221, 96).stroke();
+  
+  // Coat of arms at top center of stamp (CRITICAL)
+  if (imageExists(coatOfArmsPath)) {
+    try {
+      doc.image(coatOfArmsPath, stampX + 87, stampY + 5, { width: 50, height: 50 });
+    } catch (error) {
+      // Fallback: Draw placeholder
+      doc.fontSize(8).fillColor('#CC0000').text('🇿🇦', stampX + 100, stampY + 20);
+    }
+  }
+  
+  // "Office stamp" text - centered below coat of arms
+  doc.fontSize(7)
+     .font('Helvetica-Oblique')
+     .fillColor('#CC0000')
+     .text('Office stamp', stampX + 85, stampY + 58, { width: 60, align: 'center' });
+  
+  // DEPARTMENT OF HOME AFFAIRS - centered
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .fillColor('#CC0000')
+     .text('DEPARTMENT OF HOME AFFAIRS', stampX + 20, stampY + 70, { width: 185, align: 'center' });
+  
+  // PRIVATE BAG X114 - centered
+  doc.fontSize(8)
+     .font('Helvetica-Bold')
+     .text('PRIVATE BAG X114', stampX + 20, stampY + 82, { width: 185, align: 'center' });
+  
+  // Location name - centered and bold
+  y += 5;
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .fillColor('#CC0000')
+     .text('Makhosini CBT', stampX + 20, stampY + 92, { width: 185, align: 'center' });
+  
+  // PRETORIA  0001 - small text at bottom
+  doc.fontSize(7)
+     .font('Helvetica')
+     .fillColor('#CC0000')
+     .text('PRETORIA  0001', stampX + 20, stampY + 104, { width: 185, align: 'center' });
+  
+  // Add small "07" reference number in bottom right
+  doc.fontSize(10)
+     .font('Helvetica-Bold')
+     .fillColor('#CC0000')
+     .text('07', stampX + 200, stampY + 85);
+
+  // Signature section (left side) - matches official layout
+  const sigY = y + 45;
+  
+  // Signature line
+  doc.strokeColor('#000000').lineWidth(1);
+  doc.moveTo(leftCol, sigY).lineTo(leftCol + 200, sigY).stroke();
+  
+  // Add actual signature appearance (handwritten style)
+  doc.fontSize(16)
+     .font('Times-Italic')
+     .fillColor('#000000')
+     .text('Makhode', leftCol + 5, sigY - 18);
+  
+  doc.fontSize(8)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('DIRECTOR-GENERAL', leftCol, sigY + 8);
+  
+  doc.fontSize(8)
+     .font('Helvetica')
+     .text('DEPARTMENT OF HOME AFFAIRS', leftCol, sigY + 23);
+
+  // Name and initials section (right side, aligned with stamp)
+  doc.fontSize(11)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('Makhode LT', stampX + 65, sigY - 22);
+  
+  // Underline for signature
+  doc.moveTo(stampX + 50, sigY).lineTo(stampX + 175, sigY).stroke('#000000');
+  
+  doc.fontSize(7)
+     .font('Helvetica-Oblique')
+     .fillColor('#666666')
+     .text('Surname and Initials', stampX + 63, sigY + 5);
+
+  y += 90;
+
+  // Date printed and Printed by section (two columns with underlines)
+  const datePrintedY = y;
+  doc.moveTo(leftCol, datePrintedY).lineTo(leftCol + 200, datePrintedY).stroke('#000000');
+  doc.moveTo(rightCol - 20, datePrintedY).lineTo(545, datePrintedY).stroke('#000000');
+
+  doc.fontSize(8)
+     .font('Helvetica-Oblique')
+     .fillColor('#666666')
+     .text('Date printed', leftCol + 50, datePrintedY + 8);
+  
+  doc.text('Printed by: (system code)', rightCol + 30, datePrintedY + 8);
+
+  y += 45;
+
+  // Conditions section
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('Conditions', leftCol, y);
+
+  y += 18;
+  doc.fontSize(8)
+     .font('Helvetica')
+     .fillColor('#000000')
+     .text('(i)  This permit is issued once only and must be duly safeguarded.', 50, y, { width: 495 });
+  
+  y += 12;
+  doc.text('(ii) Permanent residents who are absent from the Republic for three years or longer may lose their right to permanent residence in', 50, y, { width: 495 });
+  
+  y += 10;
+  doc.text('     the Republic. A period of absence may only be interrupted by an admission and sojourn in the Republic.', 50, y, { width: 495 });
+
+  // Bottom section - Control Number with barcode
+  y = 745;
+  
+  doc.fontSize(9)
+     .font('Helvetica-Bold')
+     .fillColor('#000000')
+     .text('Control Number', 420, y);
+  
+  doc.fontSize(11)
+     .font('Helvetica-Bold')
+     .text('No. A', 490, y + 18);
+
+  // Barcode representation (left bottom)
+  doc.fontSize(20)
+     .font('Courier-Bold')
+     .fillColor('#000000')
+     .text('||||| |||| ||| |||| ||| ||| ||||', 50, y + 10);
+  
+  // Document footer metadata
+  doc.fontSize(6)
+     .font('Helvetica')
+     .fillColor('#999999')
+     .text('Imaging House Tel: (012) 3484400', 50, y + 35);
 }
 
-function generateWorkPermitPDF(doc, permit) {
+async function generateWorkPermitPDF(doc, permit) {
   drawDHAHeader(doc, 'GENERAL WORK VISA SECTION 19(2)');
 
   let y = 170;
@@ -259,7 +529,7 @@ function generateWorkPermitPDF(doc, permit) {
   doc.text('Director-General: Home Affairs', 50, y);
 }
 
-function generateRelativesPermitPDF(doc, permit) {
+async function generateRelativesPermitPDF(doc, permit) {
   drawDHAHeader(doc, "RELATIVE'S VISA (SPOUSE)");
 
   let y = 170;
@@ -316,7 +586,7 @@ function generateRelativesPermitPDF(doc, permit) {
   doc.text('For Director-General: Home Affairs', 50, y);
 }
 
-function generateBirthCertificatePDF(doc, permit) {
+async function generateBirthCertificatePDF(doc, permit) {
   drawDHAHeader(doc, 'BIRTH CERTIFICATE');
 
   doc.fontSize(9).fillColor('#666666')
@@ -393,7 +663,7 @@ function generateBirthCertificatePDF(doc, permit) {
      .text(`Control Number: ${permit.referenceNumber || 'G' + Math.random().toString().slice(2, 9)}`, 50, 750);
 }
 
-function generateNaturalizationPDF(doc, permit) {
+async function generateNaturalizationPDF(doc, permit) {
   doc.fontSize(18).fillColor('#000000').font('Times-Bold')
      .text('Certificate of Naturalisation', 50, 100, { align: 'center', width: 495 });
 
@@ -462,7 +732,7 @@ function generateNaturalizationPDF(doc, permit) {
      .text(`Control Number: ${permit.controlNumber || 'A' + Math.random().toString().slice(2, 9)}`, 50, 750);
 }
 
-function generateRefugeePDF(doc, permit) {
+async function generateRefugeePDF(doc, permit) {
   drawDHAHeader(doc, 'FORMAL RECOGNITION OF REFUGEE STATUS IN THE RSA');
 
   let y = 170;
@@ -540,7 +810,7 @@ function generateRefugeePDF(doc, permit) {
   doc.text('asmverifications@dha.gov.za', 50, y + 12, { align: 'center', width: 495 });
 }
 
-function generateGenericPermitPDF(doc, permit) {
+async function generateGenericPermitPDF(doc, permit) {
   drawDHAHeader(doc, permit.type || 'OFFICIAL DOCUMENT');
 
   let y = 180;

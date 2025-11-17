@@ -25,14 +25,20 @@ const COAT_OF_ARMS = {
 
 // Document templates for fallback ONLY
 const TEMPLATES = {
-  'Permanent Residence': path.join(PROJECT_ROOT, 'Template permanent resident'),
-  'Permanent Resident': path.join(PROJECT_ROOT, 'Permanent resident'),
+  'Birth Certificate': path.join(PROJECT_ROOT, 'attached_assets/IMG_9057_1763376990739.JPG'),
+  'Permanent Residence': path.join(PROJECT_ROOT, 'attached_assets/IMG_9149_1763377454038.png'),
+  'Permanent Resident': path.join(PROJECT_ROOT, 'attached_assets/IMG_9144_1763377365326.png'),
   'Naturalisation': path.join(PROJECT_ROOT, 'Naturalisation'),
-  'Naturalization Certificate': path.join(PROJECT_ROOT, 'Naturalisation'),
-  'General Work Permit': path.join(PROJECT_ROOT, 'Workers permit'),
-  'Work Permit': path.join(PROJECT_ROOT, 'Workers permit'),
-  "Relative's Permit": path.join(PROJECT_ROOT, 'Relative visa'),
-  "Relative's Visa": path.join(PROJECT_ROOT, 'Relative visa')
+  'Naturalization Certificate': path.join(PROJECT_ROOT, 'attached_assets/IMG_6491_1763377420758.png'),
+  'Citizenship Certificate': path.join(PROJECT_ROOT, 'attached_assets/IMG_6491_1763377420758.png'),
+  'General Work Permit': path.join(PROJECT_ROOT, 'attached_assets/IMG_9147_1763377365325.png'),
+  'Work Permit': path.join(PROJECT_ROOT, 'attached_assets/IMG_9147_1763377365325.png'),
+  'Work Visa': path.join(PROJECT_ROOT, 'attached_assets/IMG_9142_1763377365326.png'),
+  "Relative's Permit": path.join(PROJECT_ROOT, 'attached_assets/IMG_9145_1763377365326.png'),
+  "Relative's Visa": path.join(PROJECT_ROOT, 'attached_assets/IMG_9145_1763377365326.png'),
+  'Refugee Status (Section 24)': path.join(PROJECT_ROOT, 'attached_assets/IMG_9143_1763377365326.png'),
+  'Refugee Certificate': path.join(PROJECT_ROOT, 'attached_assets/IMG_9146_1763377365326.png'),
+  'Declaration of Allegiance': path.join(PROJECT_ROOT, 'attached_assets/IMG_9141_1763377365326.png')
 };
 
 /**

@@ -15,6 +15,13 @@ import permitsRouter from './routes/permits.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.resolve(__dirname, '..');
+const ASSETS_DIR = path.join(PROJECT_ROOT, 'attached_assets');
+
+console.log('🔍 PATH DEBUG INFO:');
+console.log('  __dirname:', __dirname);
+console.log('  PROJECT_ROOT:', PROJECT_ROOT);
+console.log('  ASSETS_DIR:', ASSETS_DIR);
 
 validateConfig();
 logConfigStatus();
@@ -43,7 +50,7 @@ app.use('/api/', limiter);
 app.set('trust proxy', 1);
 
 // Serve static files with proper headers
-app.use('/public', express.static(path.join(__dirname, '../attached_assets'), {
+app.use('/public', express.static(ASSETS_DIR, {
   setHeaders: (res, path) => {
     if (path.endsWith('.html')) {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -55,7 +62,7 @@ app.use('/public', express.static(path.join(__dirname, '../attached_assets'), {
 // Root route - serve main back office interface
 app.get('/', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  const filePath = path.join(__dirname, '../attached_assets/index.html');
+  const filePath = path.join(ASSETS_DIR, 'index.html');
   res.sendFile(filePath, (err) => {
     if (err) {
       console.error('[ROUTE ERROR] Root - File not found:', filePath);
@@ -71,7 +78,7 @@ app.get('/', (req, res) => {
 // Admin dashboard route
 app.get('/admin-dashboard', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/admin-dashboard.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'admin-dashboard.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] Admin Dashboard:', err.message);
       res.status(404).send('Admin dashboard not found');
@@ -82,7 +89,7 @@ app.get('/admin-dashboard', (req, res) => {
 // User profile route
 app.get('/user-profile', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/permit-profile.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'permit-profile.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] User Profile:', err.message);
       res.status(404).send('User profile not found');
@@ -93,7 +100,7 @@ app.get('/user-profile', (req, res) => {
 // ID Card route
 app.get('/id-card', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/id-card.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'id-card.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] ID Card:', err.message);
       res.status(404).send('Document not found');
@@ -104,7 +111,7 @@ app.get('/id-card', (req, res) => {
 // Permanent Residence route
 app.get('/permanent-residence', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/permanent-residence.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'permanent-residence.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] Permanent Residence:', err.message);
       res.status(404).send('Document not found');
@@ -115,7 +122,7 @@ app.get('/permanent-residence', (req, res) => {
 // Travel Document route
 app.get('/travel-document', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/travel-document.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'travel-document.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] Travel Document:', err.message);
       res.status(404).send('Document not found');
@@ -126,7 +133,7 @@ app.get('/travel-document', (req, res) => {
 // E-Visa route
 app.get('/e-visa', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/e-visa.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'e-visa.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] E-Visa:', err.message);
       res.status(404).send('Document not found');
@@ -137,7 +144,7 @@ app.get('/e-visa', (req, res) => {
 // Permit Profile route
 app.get('/permit-profile', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/permit-profile.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'permit-profile.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] Permit Profile:', err.message);
       res.status(404).send('Permit profile not found');
@@ -148,7 +155,7 @@ app.get('/permit-profile', (req, res) => {
 // Verification route
 app.get('/verify', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/verify.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'verify.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] Verification:', err.message);
       res.status(404).send('Verification page not found');
@@ -159,7 +166,7 @@ app.get('/verify', (req, res) => {
 // Work Permit route
 app.get('/work-permit', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(__dirname, '../attached_assets/work-permit.html'), (err) => {
+  res.sendFile(path.join(ASSETS_DIR, 'work-permit.html'), (err) => {
     if (err) {
       console.error('[ROUTE ERROR] Work Permit:', err.message);
       res.status(404).send('Document not found');

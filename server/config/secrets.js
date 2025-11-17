@@ -1,7 +1,7 @@
 export const config = {
   env: process.env.NODE_ENV || 'production',
-  port: process.env.PORT || 5000,
-  
+  port: parseInt(process.env.PORT || '5432', 10),
+
   production: {
     useProductionApis: true,
     forceRealApis: true,
@@ -71,21 +71,21 @@ export function validateConfig() {
 
   if (config.production.useProductionApis) {
     console.log('✅ Production mode enabled - Real DHA API Integration');
-    
+
     if (!config.dha.nprApiKey) warnings.push('DHA_NPR_API_KEY not configured');
     if (!config.dha.dmsApiKey) warnings.push('DHA_DMS_API_KEY not configured');
     if (!config.dha.visaApiKey) warnings.push('DHA_VISA_API_KEY not configured');
     if (!config.dha.mcsApiKey) warnings.push('DHA_MCS_API_KEY not configured');
     if (!config.dha.abisApiKey) warnings.push('DHA_ABIS_API_KEY not configured');
     if (!config.dha.hanisApiKey) warnings.push('HANIS_API_KEY not configured');
-    
+
     if (!config.endpoints.npr) warnings.push('DHA_NPR_ENDPOINT not configured');
     if (!config.endpoints.dms) warnings.push('DHA_DMS_ENDPOINT not configured');
     if (!config.endpoints.visa) warnings.push('DHA_VISA_ENDPOINT not configured');
     if (!config.endpoints.mcs) warnings.push('DHA_MCS_ENDPOINT not configured');
     if (!config.endpoints.abis) warnings.push('DHA_ABIS_ENDPOINT not configured');
     if (!config.endpoints.hanis) warnings.push('HANIS_ENDPOINT not configured');
-    
+
     const endpointCount = [
       config.endpoints.npr,
       config.endpoints.dms,
@@ -94,7 +94,7 @@ export function validateConfig() {
       config.endpoints.abis,
       config.endpoints.hanis
     ].filter(Boolean).length;
-    
+
     if (endpointCount === 6) {
       console.log('✅ All 6 DHA production endpoints configured');
     } else {

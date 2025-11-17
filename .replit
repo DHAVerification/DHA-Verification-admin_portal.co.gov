@@ -66,6 +66,10 @@ localPort = 5002
 externalPort = 3003
 
 [[ports]]
+localPort = 5432
+externalPort = 8099
+
+[[ports]]
 localPort = 8000
 externalPort = 8000
 
@@ -114,5 +118,5 @@ channel = "stable-25_05"
 
 [deployment]
 deploymentTarget = "vm"
-run = ["node", "dist/server/index-minimal.js"]
-build = ["bash", "render-build-production.sh"]
+run = ["sh", "-c", "bash start-dev.sh"]
+build = ["sh", "-c", "npm install"]

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Verification - Official DHA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(to right, #0d47a1, #1565c0);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .verification-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(13, 71, 161, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .verification-card h2 {
+            color: #0d47a1;
+            font-size: 20px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #fdd835;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #0d47a1;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #0d47a1;
+            box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.1);
+        }
+
+        .input-hint {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #0d47a1, #1565c0);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #0d47a1;
+            border: 1px solid #0d47a1;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .result-card {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-card.error {
+            background: #ffebee;
+            border-left-color: #c62828;
+        }
+
+        .result-card.success {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .result-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .result-card.success .result-title {
+            color: #2e7d32;
+        }
+
+        .result-card.error .result-title {
+            color: #c62828;
+        }
+
+        .result-content {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .result-content p {
+            margin-bottom: 8px;
+        }
+
+        .document-types {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .document-types h4 {
+            color: #0d47a1;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .document-types ul {
+            list-style: none;
+            columns: 2;
+            gap: 20px;
+        }
+
+        .document-types li {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .document-types li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #0d47a1;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .info-box strong {
+            color: #0d47a1;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .document-types ul {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇿🇦 Verify Your Document</h1>
+            <p>Official South African Department of Home Affairs - Secure Verification System</p>
+        </header>
+
+        <div class="verification-card">
+            <h2>Enter Verification Details</h2>
+
+            <div class="document-types">
+                <h4>Supported Document Types:</h4>
+                <ul>
+                    <li>South African ID</li>
+                    <li>Travel Document</li>
+                    <li>Permanent Residence Permit</li>
+                    <li>Work Permit</li>
+                    <li>E-Visa Application</li>
+                    <li>Travel Authorization</li>
+                </ul>
+            </div>
+
+            <form id="verificationForm" onsubmit="handleVerification(event)">
+                <div class="input-group">
+                    <label for="docType">Document Type</label>
+                    <select id="docType" required>
+                        <option value="">-- Select Document Type --</option>
+                        <option value="id-card">South African ID Card</option>
+                        <option value="travel-document">Travel Document</option>
+                        <option value="permanent-residence">Permanent Residence Permit</option>
+                        <option value="work-permit">Work Permit</option>
+                        <option value="e-visa">E-Visa Application</option>
+                        <option value="travel-auth">Travel Authorization</option>
+                    </select>
+                    <div class="input-hint">Select the type of document you want to verify</div>
+                </div>
+
+                <div class="input-group">
+                    <label for="docNumber">Document Reference Number / ID Number</label>
+                    <input type="text" id="docNumber" placeholder="e.g., 9401015000000 or ZA-PR-2025-0001234" required>
+                    <div class="input-hint">Enter the document number or reference code from your document</div>
+                </div>
+
+                <div class="input-group">
+                    <label for="qrCode">QR Code Reference (Optional)</label>
+                    <input type="text" id="qrCode" placeholder="QR code data or scan result">
+                    <div class="input-hint">If scanning QR code, paste the scanned data here</div>
+                </div>
+
+                <div class="input-group">
+                    <label for="issuanceDate">Document Issuance Date</label>
+                    <input type="date" id="issuanceDate" required>
+                    <div class="input-hint">The date when the document was issued</div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">✓ Verify Document</button>
+                    <button type="reset" class="btn btn-secondary">Clear</button>
+                </div>
+            </form>
+
+            <div id="resultCard" class="result-card">
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-content" id="resultContent"></div>
+            </div>
+
+            <div class="info-box">
+                <strong>📱 How to Verify:</strong><br>
+                1. Select your document type<br>
+                2. Enter your document reference number<br>
+                3. Enter the issuance date<br>
+                4. Click Verify to authenticate your document<br><br>
+                <strong>Need Help?</strong> Contact Department of Home Affairs at +27 (0)12 406 8000 or visit www.dha.gov.za
+            </div>
+        </div>
+
+        <div class="verification-card">
+            <h2>Scan QR Code</h2>
+            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                Official DHA documents contain QR codes that link directly to this verification page with your document details pre-filled. Simply scan the QR code on any official DHA document to verify its authenticity.
+            </p>
+            <div style="background: #f5f5f5; border: 2px dashed #ccc; border-radius: 4px; padding: 40px; text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 15px;">📱</div>
+                <p style="font-size: 12px; color: #999;">
+                    Use your mobile device camera or QR code scanner to verify documents<br>
+                    All documents include secure, encrypted QR codes
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleVerification(event) {
+            event.preventDefault();
+
+            const docType = document.getElementById('docType').value;
+            const docNumber = document.getElementById('docNumber').value;
+            const issuanceDate = document.getElementById('issuanceDate').value;
+            const qrCode = document.getElementById('qrCode').value;
+
+            if (!docType || !docNumber || !issuanceDate) {
+                showResult(false, 'Please fill in all required fields');
+                return;
+            }
+
+            // Simulate verification
+            setTimeout(() => {
+                // Mock verification - in production this would call backend API
+                const isValid = Math.random() > 0.1; // 90% success rate for demo
+                
+                if (isValid) {
+                    showResult(true, `✓ Document Verified Successfully!`, {
+                        docType: getDocumentTypeLabel(docType),
+                        docNumber: docNumber,
+                        issuanceDate: issuanceDate,
+                        status: 'VALID AND AUTHENTIC',
+                        verifiedAt: new Date().toLocaleString(),
+                        digitalsignature: 'VERIFIED ✓'
+                    });
+                } else {
+                    showResult(false, '✗ Document Verification Failed', {
+                        reason: 'Document reference not found in official registry',
+                        suggestion: 'Please check the document number and try again'
+                    });
+                }
+            }, 1500);
+        }
+
+        function showResult(isSuccess, title, details) {
+            const resultCard = document.getElementById('resultCard');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultContent = document.getElementById('resultContent');
+
+            resultTitle.textContent = title;
+
+            if (isSuccess) {
+                resultCard.className = 'result-card success';
+                resultContent.innerHTML = `
+                    <p><strong>Document Type:</strong> ${details.docType}</p>
+                    <p><strong>Reference Number:</strong> ${details.docNumber}</p>
+                    <p><strong>Issuance Date:</strong> ${details.issuanceDate}</p>
+                    <p><strong>Status:</strong> <span style="color: #2e7d32; font-weight: 600;">${details.status}</span></p>
+                    <p><strong>Verified At:</strong> ${details.verifiedAt}</p>
+                    <p><strong>Digital Signature:</strong> ${details.digitalsignature}</p>
+                `;
+            } else {
+                resultCard.className = 'result-card error';
+                resultContent.innerHTML = `
+                    <p><strong>Error:</strong> ${details.reason}</p>
+                    <p><strong>Suggestion:</strong> ${details.suggestion}</p>
+                    <p style="margin-top: 10px; font-size: 11px; color: #999;">
+                        For assistance, contact the Department of Home Affairs or visit www.dha.gov.za
+                    </p>
+                `;
+            }
+
+            resultCard.style.display = 'block';
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function getDocumentTypeLabel(type) {
+            const labels = {
+                'id-card': 'South African ID Card',
+                'travel-document': 'Travel Document',
+                'permanent-residence': 'Permanent Residence Permit',
+                'work-permit': 'Work Permit',
+                'e-visa': 'E-Visa Application',
+                'travel-auth': 'Travel Authorization'
+            };
+            return labels[type] || type;
+        }
+
+        // Pre-fill from URL parameters if available
+        window.addEventListener('load', function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('type')) {
+                document.getElementById('docType').value = params.get('type');
+            }
+            if (params.has('id')) {
+                document.getElementById('docNumber').value = params.get('id');
+            }
+        });
+    </script>
+</body>
+</html>

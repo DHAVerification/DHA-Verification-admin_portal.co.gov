@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Permit - Official DHA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(to right, #0d47a1, #1565c0);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .permit-container {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .permit-document {
+            border: 3px solid #0d47a1;
+            padding: 30px;
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+            box-shadow: inset 0 0 20px rgba(13, 71, 161, 0.05);
+        }
+
+        /* Security watermark */
+        .permit-document::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(13, 71, 161, 0.02) 35px, rgba(13, 71, 161, 0.02) 70px);
+            pointer-events: none;
+        }
+
+        .permit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #fdd835;
+            position: relative;
+            z-index: 1;
+        }
+
+        .coat-of-arms {
+            font-size: 48px;
+        }
+
+        .permit-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .permit-title h2 {
+            color: #0d47a1;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .permit-title p {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .permit-badge {
+            background: #0d47a1;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .permit-content {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .photo-placeholder {
+            width: 120px;
+            height: 150px;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            font-size: 40px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .applicant-details {
+            display: grid;
+            gap: 12px;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #0d47a1;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        .employment-details {
+            background: #f9f9f9;
+            border-left: 4px solid #fdd835;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .employment-details h4 {
+            color: #0d47a1;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .employment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .employment-item {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .employment-item strong {
+            color: #0d47a1;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .validity-box {
+            background: #fff3cd;
+            border: 2px solid #fdd835;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .validity-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .validity-label {
+            font-size: 10px;
+            color: #856404;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .validity-value {
+            font-size: 13px;
+            color: #0d47a1;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        .conditions-section {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .conditions-section h5 {
+            color: #2e7d32;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .conditions-list {
+            list-style: none;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .conditions-list li {
+            margin-bottom: 6px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .conditions-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .verification-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .qr-code {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .verification-info {
+            flex: 1;
+            margin-left: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .footer-notice {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #ccc;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #0d47a1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1565c0;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #0d47a1;
+            border: 1px solid #0d47a1;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        @media (max-width: 768px) {
+            .permit-content {
+                grid-template-columns: 1fr;
+            }
+
+            .employment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .validity-box {
+                grid-template-columns: 1fr;
+            }
+
+            .verification-area {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .verification-info {
+                margin-left: 0;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .header {
+                border-radius: 0;
+            }
+
+            .actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Work Permit</h1>
+            <p>South African Department of Home Affairs</p>
+        </div>
+
+        <div class="permit-container">
+            <div class="permit-document">
+                <div class="permit-header">
+                    <div class="coat-of-arms">🇿🇦</div>
+                    <div class="permit-title">
+                        <h2>Work Permit</h2>
+                        <p>South Africa</p>
+                    </div>
+                    <div class="permit-badge">General Work</div>
+                </div>
+
+                <div class="permit-content">
+                    <div class="photo-section">
+                        <div class="photo-placeholder">📷</div>
+                    </div>
+
+                    <div class="applicant-details">
+                        <div class="detail-row">
+                            <div class="detail-label">Permit Number</div>
+                            <div class="detail-value">ZA-WP-2025-0005678</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Surname</div>
+                            <div class="detail-value">SURNAME</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Given Names</div>
+                            <div class="detail-value">GIVEN NAMES</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Date of Birth</div>
+                            <div class="detail-value">01 Jan 1985</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Nationality</div>
+                            <div class="detail-value">To Be Specified</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Passport Number</div>
+                            <div class="detail-value">CD987654</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="employment-details">
+                    <h4>📋 Employment Details</h4>
+                    <div class="employment-grid">
+                        <div class="employment-item">
+                            <strong>Employer:</strong>
+                            Official Company Name
+                        </div>
+                        <div class="employment-item">
+                            <strong>Position:</strong>
+                            Professional Role
+                        </div>
+                        <div class="employment-item">
+                            <strong>Sector:</strong>
+                            Professional Services
+                        </div>
+                        <div class="employment-item">
+                            <strong>Salary Range:</strong>
+                            As per employment contract
+                        </div>
+                    </div>
+                </div>
+
+                <div class="validity-box">
+                    <div class="validity-item">
+                        <div class="validity-label">Issue Date</div>
+                        <div class="validity-value">01/01/2025</div>
+                    </div>
+                    <div class="validity-item">
+                        <div class="validity-label">Expiry Date</div>
+                        <div class="validity-value">01/01/2028</div>
+                    </div>
+                    <div class="validity-item">
+                        <div class="validity-label">Validity</div>
+                        <div class="validity-value">3 Years</div>
+                    </div>
+                </div>
+
+                <div class="conditions-section">
+                    <h5>✓ Permit Conditions & Rights</h5>
+                    <ul class="conditions-list">
+                        <li>Right to work for designated employer only</li>
+                        <li>Unrestricted employment in designated occupation</li>
+                        <li>Permission to reside in South Africa for employment</li>
+                        <li>Must maintain employment contract validity</li>
+                        <li>Subject to South African labor laws</li>
+                        <li>Employer must notify DHA of contract changes</li>
+                        <li>Renewable upon expiry if conditions met</li>
+                    </ul>
+                </div>
+
+                <div class="verification-area">
+                    <div class="verification-info">
+                        <strong>📱 Verification Code:</strong><br>
+                        Reference: ZA-WP-2025-0005678<br>
+                        Check status at: www.dha.gov.za/verify<br>
+                        Valid from: 01/01/2025 to 01/01/2028
+                    </div>
+                    <div class="qr-code">
+                        <div style="font-size: 10px;">Work<br>Permit<br>Verify</div>
+                    </div>
+                </div>
+
+                <div class="footer-notice">
+                    <strong>IMPORTANT:</strong> This work permit is linked to the designated employer and position. Changes to employment must be reported to DHA within 30 days. Unauthorized employment is a criminal offense. For assistance contact Department of Home Affairs at +27 (0)12 406 8000.
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+                <button class="btn btn-primary" onclick="downloadPDF()">⬇️ Download PDF</button>
+                <button class="btn btn-secondary" onclick="verifyDocument()">✓ Verify Permit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            alert('Generating work permit PDF...');
+            window.open('/api/generate-pdf?type=work-permit', '_blank');
+        }
+
+        function verifyDocument() {
+            window.location.href = '/verify?type=work-permit&id=ZA-WP-2025-0005678';
+        }
+    </script>
+</body>
+</html>

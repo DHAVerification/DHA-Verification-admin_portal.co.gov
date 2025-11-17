@@ -6,7 +6,9 @@ dist
 .vercel
 
 # Development files
-attached_assets/
+# NOTE: `attached_assets` was previously ignored during development. We now need it
+# in the repository (production templates). Remove the ignore so it will be committed.
+#attached_assets/
 *.test.ts
 *.test.js
 *.spec.ts

@@ -18,14 +18,35 @@ const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const ASSETS_DIR = path.join(PROJECT_ROOT, 'attached_assets');
 
-// Handle Render's potential build directory structure
-const FALLBACK_ASSETS_DIR = process.env.RENDER ? '/opt/render/project/attached_assets' : ASSETS_DIR;
-const FINAL_ASSETS_DIR = ASSETS_DIR;
+// Candidate paths to look for attached_assets on different platforms
+const candidateAssetPaths = [
+  path.join(PROJECT_ROOT, 'attached_assets'),
+  path.join(PROJECT_ROOT, '..', 'attached_assets'), // /opt/render/project/attached_assets
+  '/opt/render/project/attached_assets',
+  '/opt/render/project/src/attached_assets',
+  path.join(process.cwd(), 'attached_assets')
+];
+
+import fs from 'fs';
+
+// Find the first candidate that exists
+let FINAL_ASSETS_DIR = ASSETS_DIR;
+for (const p of candidateAssetPaths) {
+  try {
+    if (fs.existsSync(p) && fs.statSync(p).isDirectory()) {
+      FINAL_ASSETS_DIR = p;
+      break;
+    }
+  } catch (err) {
+    // ignore and continue
+  }
+}
 
 console.log('🔍 PATH DEBUG INFO:');
 console.log('  __dirname:', __dirname);
 console.log('  PROJECT_ROOT:', PROJECT_ROOT);
 console.log('  ASSETS_DIR:', ASSETS_DIR);
+console.log('  CANDIDATE_ASSET_PATHS:', candidateAssetPaths);
 console.log('  FINAL_ASSETS_DIR:', FINAL_ASSETS_DIR);
 console.log('  NODE_ENV:', process.env.NODE_ENV);
 console.log('  RENDER env:', process.env.RENDER);
@@ -80,7 +101,7 @@ const serveFile = (res, filename, fallbackPaths = []) => {
 };
 
 // Serve static files with proper headers
-app.use('/public', express.static(ASSETS_DIR, {
+app.use('/public', express.static(FINAL_ASSETS_DIR, {
   setHeaders: (res, path) => {
     if (path.endsWith('.html')) {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');

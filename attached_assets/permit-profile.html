@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permit Profile - DHA Document Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(to right, #0d47a1, #1565c0);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(13, 71, 161, 0.1);
+            border-left: 4px solid #0d47a1;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            align-items: flex-start;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #0d47a1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            background: #f5f5f5;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h2 {
+            color: #0d47a1;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-item {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .info-label {
+            color: #0d47a1;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .documents-section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(13, 71, 161, 0.1);
+        }
+
+        .documents-section h3 {
+            color: #0d47a1;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #fdd835;
+            padding-bottom: 10px;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .doc-item {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .doc-item:hover {
+            box-shadow: 0 4px 12px rgba(13, 71, 161, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .doc-icon {
+            font-size: 32px;
+        }
+
+        .doc-name {
+            color: #0d47a1;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .doc-status {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .doc-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 6px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-view {
+            background: #0d47a1;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #1565c0;
+        }
+
+        .btn-download {
+            background: #fdd835;
+            color: #0d47a1;
+        }
+
+        .btn-download:hover {
+            background: #ffeb3b;
+        }
+
+        .quick-actions {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(13, 71, 161, 0.1);
+        }
+
+        .quick-actions h3 {
+            color: #0d47a1;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #fdd835;
+            padding-bottom: 10px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #0d47a1, #1565c0);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
+        }
+
+        .verification-section {
+            background: linear-gradient(135deg, #0d47a1, #1565c0);
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .verification-section h4 {
+            margin-bottom: 10px;
+        }
+
+        .verification-section p {
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .verify-btn {
+            background: #fdd835;
+            color: #0d47a1;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .verify-btn:hover {
+            background: #ffeb3b;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Your Permit Profile</h1>
+            <p>South African Department of Home Affairs - Secure Document Management</p>
+        </header>
+
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-photo">👤</div>
+                <div class="profile-info">
+                    <h2>Surname, Given Names</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">ID/Passport Number</div>
+                            <div class="info-value">9401015000000</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value">01 January 1994</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Nationality</div>
+                            <div class="info-value">South African</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Profile Status</div>
+                            <div class="info-value">
+                                <span class="status-badge">✓ ACTIVE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="documents-section">
+            <h3>📋 Your Documents</h3>
+            <div class="documents-grid">
+                <div class="doc-item">
+                    <div class="doc-icon">🆔</div>
+                    <div class="doc-name">South African ID</div>
+                    <div class="doc-status">✓ Valid - Expires 01/01/2035</div>
+                    <div class="doc-actions">
+                        <button class="btn-small btn-view" onclick="viewDocument('id-card')">View</button>
+                        <button class="btn-small btn-download" onclick="downloadDocument('id-card')">Download</button>
+                    </div>
+                </div>
+
+                <div class="doc-item">
+                    <div class="doc-icon">✈️</div>
+                    <div class="doc-name">Travel Document</div>
+                    <div class="doc-status">✓ Valid - Expires 01/01/2030</div>
+                    <div class="doc-actions">
+                        <button class="btn-small btn-view" onclick="viewDocument('travel-document')">View</button>
+                        <button class="btn-small btn-download" onclick="downloadDocument('travel-document')">Download</button>
+                    </div>
+                </div>
+
+                <div class="doc-item">
+                    <div class="doc-icon">🏠</div>
+                    <div class="doc-name">Permanent Residence</div>
+                    <div class="doc-status">✓ Valid - Indefinite</div>
+                    <div class="doc-actions">
+                        <button class="btn-small btn-view" onclick="viewDocument('permanent-residence')">View</button>
+                        <button class="btn-small btn-download" onclick="downloadDocument('permanent-residence')">Download</button>
+                    </div>
+                </div>
+
+                <div class="doc-item">
+                    <div class="doc-icon">📱</div>
+                    <div class="doc-name">E-Visa Application</div>
+                    <div class="doc-status">✓ Approved - Expires 01/01/2026</div>
+                    <div class="doc-actions">
+                        <button class="btn-small btn-view" onclick="viewDocument('e-visa')">View</button>
+                        <button class="btn-small btn-download" onclick="downloadDocument('e-visa')">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3>⚡ Quick Actions</h3>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="generateCertificate()">Generate Certificate</button>
+                <button class="action-btn" onclick="verifyDocuments()">Verify Documents</button>
+                <button class="action-btn" onclick="downloadAll()">Download All</button>
+                <button class="action-btn" onclick="shareProfile()">Share Profile</button>
+            </div>
+        </div>
+
+        <div class="verification-section">
+            <h4>🔒 Verify Your Documents</h4>
+            <p>Use the QR codes on your official documents to verify authenticity and access your profile</p>
+            <button class="verify-btn" onclick="openVerification()">Open Verification Portal →</button>
+        </div>
+    </div>
+
+    <script>
+        function viewDocument(type) {
+            window.location.href = '/' + type;
+        }
+
+        function downloadDocument(type) {
+            window.open('/api/generate-pdf?type=' + type, '_blank');
+        }
+
+        function generateCertificate() {
+            alert('Certificate generation feature coming soon');
+        }
+
+        function verifyDocuments() {
+            window.location.href = '/verify';
+        }
+
+        function downloadAll() {
+            alert('Downloading all documents as archive...');
+            window.open('/api/download-all-documents', '_blank');
+        }
+
+        function shareProfile() {
+            alert('Share profile feature coming soon');
+        }
+
+        function openVerification() {
+            window.location.href = '/verify';
+        }
+    </script>
+</body>
+</html>

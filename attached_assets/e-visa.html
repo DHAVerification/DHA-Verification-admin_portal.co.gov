@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Visa Application - Official DHA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(to right, #0d47a1, #1565c0);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .visa-container {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visa-document {
+            border: 3px solid #0d47a1;
+            padding: 30px;
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+            box-shadow: inset 0 0 20px rgba(13, 71, 161, 0.05);
+        }
+
+        /* Watermark */
+        .visa-document::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(13, 71, 161, 0.02) 35px, rgba(13, 71, 161, 0.02) 70px);
+            pointer-events: none;
+        }
+
+        .visa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #fdd835;
+            position: relative;
+            z-index: 1;
+        }
+
+        .coat-of-arms {
+            font-size: 48px;
+        }
+
+        .visa-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .visa-title h2 {
+            color: #0d47a1;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .visa-title p {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .visa-type-badge {
+            background: #0d47a1;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .applicant-section {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .photo-placeholder {
+            width: 120px;
+            height: 150px;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            font-size: 40px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .applicant-info {
+            display: grid;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #0d47a1;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 13px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        .visa-details {
+            background: #f9f9f9;
+            border-left: 4px solid #fdd835;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .visa-details h4 {
+            color: #0d47a1;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .detail-item strong {
+            color: #0d47a1;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .status-section {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-section h5 {
+            color: #2e7d32;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .status-value {
+            font-size: 14px;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .validity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .validity-card {
+            background: #fff3cd;
+            border: 1px solid #fdd835;
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .validity-label {
+            font-size: 10px;
+            color: #856404;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .validity-value {
+            font-size: 13px;
+            color: #0d47a1;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        .requirements {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .requirements h5 {
+            color: #e65100;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .requirements-list {
+            list-style: none;
+            font-size: 10px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .requirements-list li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .requirements-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #ff9800;
+        }
+
+        .qr-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .qr-code {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .qr-info {
+            flex: 1;
+            margin-left: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .footer-notice {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #ccc;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #0d47a1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1565c0;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #0d47a1;
+            border: 1px solid #0d47a1;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        @media (max-width: 768px) {
+            .applicant-section {
+                grid-template-columns: 1fr;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .validity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-area {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .qr-info {
+                margin-left: 0;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .header {
+                border-radius: 0;
+            }
+
+            .actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>South African E-Visa</h1>
+            <p>Electronic Visa Application & Status</p>
+        </div>
+
+        <div class="visa-container">
+            <div class="visa-document">
+                <div class="visa-header">
+                    <div class="coat-of-arms">🇿🇦</div>
+                    <div class="visa-title">
+                        <h2>E-Visa Application</h2>
+                        <p>South Africa Immigration Services</p>
+                    </div>
+                    <div class="visa-type-badge">Tourist</div>
+                </div>
+
+                <div class="applicant-section">
+                    <div class="photo-section">
+                        <div class="photo-placeholder">📷</div>
+                    </div>
+
+                    <div class="applicant-info">
+                        <div class="info-row">
+                            <div class="info-label">Reference Number</div>
+                            <div class="info-value">ZA-EVISA-2025-98765</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Full Name</div>
+                            <div class="info-value">SURNAME, GIVEN NAMES</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Passport Number</div>
+                            <div class="info-value">AB123456</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value">01 Jan 1990</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Nationality</div>
+                            <div class="info-value">Country Name</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Passport Expiry</div>
+                            <div class="info-value">31 Dec 2030</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-section">
+                    <h5>✓ Application Status</h5>
+                    <div class="status-value">APPROVED</div>
+                </div>
+
+                <div class="validity-grid">
+                    <div class="validity-card">
+                        <div class="validity-label">Issue Date</div>
+                        <div class="validity-value">01/01/2025</div>
+                    </div>
+                    <div class="validity-card">
+                        <div class="validity-label">Expiry Date</div>
+                        <div class="validity-value">01/01/2026</div>
+                    </div>
+                    <div class="validity-card">
+                        <div class="validity-label">Validity</div>
+                        <div class="validity-value">12 Months</div>
+                    </div>
+                </div>
+
+                <div class="visa-details">
+                    <h4>📋 Visa Details</h4>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <strong>Type:</strong>
+                            Single Entry Tourist Visa
+                        </div>
+                        <div class="detail-item">
+                            <strong>Duration of Stay:</strong>
+                            Up to 90 days
+                        </div>
+                        <div class="detail-item">
+                            <strong>Purpose:</strong>
+                            Tourism and Recreation
+                        </div>
+                        <div class="detail-item">
+                            <strong>Authorized Entry Port:</strong>
+                            Any South African Port of Entry
+                        </div>
+                    </div>
+                </div>
+
+                <div class="requirements">
+                    <h5>✓ Documentation Requirements</h5>
+                    <ul class="requirements-list">
+                        <li>Valid passport (minimum 6 months validity)</li>
+                        <li>Proof of accommodation in South Africa</li>
+                        <li>Travel insurance documentation</li>
+                        <li>Return flight booking confirmation</li>
+                        <li>Proof of financial means</li>
+                    </ul>
+                </div>
+
+                <div class="qr-area">
+                    <div class="qr-info">
+                        <strong>📱 Application Status Check:</strong><br>
+                        Reference: ZA-EVISA-2025-98765<br>
+                        Check status at: www.dha.gov.za/e-visa<br>
+                        Valid from: 01/01/2025
+                    </div>
+                    <div class="qr-code">
+                        <div style="font-size: 10px;">E-Visa<br>Status<br>Verify</div>
+                    </div>
+                </div>
+
+                <div class="footer-notice">
+                    <strong>IMPORTANT:</strong> This E-Visa is electronically linked to your passport. Present this approval together with your valid passport at the port of entry. This authorization is subject to immigration officer's clearance. For more information visit www.dha.gov.za or contact Immigration Services at +27 (0)12 406 8000.
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="window.print()">🖨️ Print E-Visa</button>
+                <button class="btn btn-primary" onclick="downloadPDF()">⬇️ Download PDF</button>
+                <button class="btn btn-secondary" onclick="checkStatus()">📊 Check Status</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            alert('Generating E-Visa PDF document...');
+            window.open('/api/generate-pdf?type=e-visa', '_blank');
+        }
+
+        function checkStatus() {
+            window.location.href = '/verify?type=e-visa&reference=ZA-EVISA-2025-98765';
+        }
+    </script>
+</body>
+</html>

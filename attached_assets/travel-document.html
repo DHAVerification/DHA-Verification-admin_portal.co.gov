@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South African Travel Document - Official DHA Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(to right, #0d47a1, #1565c0);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .document-container {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Watermark pattern */
+        .document-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(13, 71, 161, 0.02) 35px, rgba(13, 71, 161, 0.02) 70px);
+            pointer-events: none;
+        }
+
+        .document {
+            border: 3px solid #0d47a1;
+            padding: 30px;
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+            box-shadow: inset 0 0 20px rgba(13, 71, 161, 0.05);
+            page-break-inside: avoid;
+        }
+
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #fdd835;
+        }
+
+        .coat-of-arms {
+            font-size: 48px;
+        }
+
+        .doc-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .doc-title h2 {
+            color: #0d47a1;
+            font-size: 18px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .doc-title p {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .security-stamp {
+            font-size: 40px;
+            opacity: 0.2;
+            transform: rotate(-15deg);
+        }
+
+        .document-content {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .photo-placeholder {
+            width: 120px;
+            height: 150px;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            font-size: 40px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .signature-area {
+            width: 100%;
+            text-align: center;
+            font-size: 9px;
+            color: #999;
+        }
+
+        .signature-line {
+            border-bottom: 1px solid #333;
+            height: 30px;
+            margin-bottom: 2px;
+        }
+
+        .holder-details {
+            display: grid;
+            gap: 12px;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #0d47a1;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        .validity-section {
+            background: #f9f9f9;
+            border-left: 4px solid #fdd835;
+            padding: 15px;
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .validity-item {
+            text-align: center;
+        }
+
+        .validity-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .validity-value {
+            font-size: 14px;
+            color: #0d47a1;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        .restrictions-section {
+            background: #fff3cd;
+            border-left: 4px solid #fdd835;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .restrictions-section h4 {
+            color: #856404;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .restrictions-list {
+            font-size: 11px;
+            line-height: 1.6;
+            color: #333;
+            list-style: none;
+        }
+
+        .restrictions-list li {
+            margin-bottom: 6px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .restrictions-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #0d47a1;
+        }
+
+        .security-info {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .security-info h5 {
+            color: #2e7d32;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .security-list {
+            list-style: none;
+        }
+
+        .security-list li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .security-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .footer-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #ccc;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .qr-verification {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .qr-code {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .verification-text {
+            flex: 1;
+            margin-left: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #0d47a1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1565c0;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #0d47a1;
+            border: 1px solid #0d47a1;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        @media (max-width: 768px) {
+            .document-content {
+                grid-template-columns: 1fr;
+            }
+
+            .validity-section {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-verification {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .verification-text {
+                margin-left: 0;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .header {
+                border-radius: 0;
+            }
+
+            .actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>South African Travel Document</h1>
+            <p>Official Government Travel Authorization</p>
+        </div>
+
+        <div class="document-container">
+            <div class="document">
+                <div class="doc-header">
+                    <div class="coat-of-arms">🇿🇦</div>
+                    <div class="doc-title">
+                        <h2>Travel Document</h2>
+                        <p>South Africa</p>
+                    </div>
+                    <div class="security-stamp">🛂</div>
+                </div>
+
+                <div class="document-content">
+                    <div class="photo-section">
+                        <div class="photo-placeholder">📷</div>
+                        <div class="signature-area">
+                            <div class="signature-line"></div>
+                            <span>Holder's Signature</span>
+                        </div>
+                    </div>
+
+                    <div class="holder-details">
+                        <div class="detail-row">
+                            <div class="detail-label">Passport/ID</div>
+                            <div class="detail-value">9401015000000</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Surname</div>
+                            <div class="detail-value">SURNAME</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Given Names</div>
+                            <div class="detail-value">GIVEN NAMES</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Date of Birth</div>
+                            <div class="detail-value">01 Jan 1994</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Nationality</div>
+                            <div class="detail-value">South African</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Occupation</div>
+                            <div class="detail-value">Not Specified</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="validity-section">
+                    <div class="validity-item">
+                        <div class="validity-label">Issue Date</div>
+                        <div class="validity-value">01/01/2025</div>
+                    </div>
+                    <div class="validity-item">
+                        <div class="validity-label">Expiry Date</div>
+                        <div class="validity-value">01/01/2030</div>
+                    </div>
+                    <div class="validity-item">
+                        <div class="validity-label">Valid For</div>
+                        <div class="validity-value">5 Years</div>
+                    </div>
+                </div>
+
+                <div class="restrictions-section">
+                    <h4>📋 Travel Restrictions</h4>
+                    <ul class="restrictions-list">
+                        <li>Valid for travel to all SADC member states</li>
+                        <li>Not valid for international travel outside SADC region</li>
+                        <li>Must obtain visa for travel to specific countries</li>
+                        <li>Subject to immigration laws of destination country</li>
+                        <li>May be revoked by competent authorities</li>
+                    </ul>
+                </div>
+
+                <div class="security-info">
+                    <h5>🔒 Security Features</h5>
+                    <ul class="security-list">
+                        <li>Encrypted QR code with biometric data</li>
+                        <li>Microprinted security text throughout</li>
+                        <li>UV responsive security features</li>
+                        <li>Digital signature embedded in document</li>
+                        <li>Multi-layer holographic security thread</li>
+                    </ul>
+                </div>
+
+                <div class="qr-verification">
+                    <div style="flex: 1;">
+                        <strong>📱 Verification Method:</strong><br>
+                        Scan QR code with mobile device or visit www.dha.gov.za/verify
+                    </div>
+                    <div class="qr-code">
+                        <div style="font-size: 10px;">Travel Doc<br>Verify QR</div>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <strong>OFFICIAL NOTICE:</strong><br>
+                    This is a binding official government document. Forgery or unauthorized alteration is a serious criminal offense. For assistance contact Department of Home Affairs at +27 (0)12 406 8000 or visit www.dha.gov.za
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+                <button class="btn btn-primary" onclick="downloadPDF()">⬇️ Download PDF</button>
+                <button class="btn btn-secondary" onclick="verifyDocument()">✓ Verify Document</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            alert('Initiating PDF download. Your document will be generated with all security features.');
+            window.open('/api/generate-pdf?type=travel-document', '_blank');
+        }
+
+        function verifyDocument() {
+            window.location.href = '/verify?type=travel-document&id=9401015000000';
+        }
+    </script>
+</body>
+</html>
